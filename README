@@ -1,0 +1,27 @@
+WarmDirt - The Greenhouse Box Temperature Controller
+
+Here's a greenhouse box temperature controller for winter growing.
+
+Requirements
+    Sensors
+        Temperature 
+            Heated dirt
+            Potted dirt
+            Box interior air
+            Box exterior air
+        Humidity 
+            Box Interior
+        Ambient light
+        Lid closed switch
+
+    Control
+        Heater
+        DC Motor
+
+    Communication
+        XBEE
+
+    Framework
+        Arduino compatible using ATMEGA328P
+        
+
