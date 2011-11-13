@@ -13,6 +13,7 @@ Requirements
             Box Interior
         Ambient light
         Lid closed switch
+        Heater current monitor
 
     Control
         Heater
