@@ -28,41 +28,43 @@ Requirements
 
 ATMEGA328P pin mapping
 
-Pin Port    Description
-1   PD3     PCINT19 OC2B    INT1
-2   PD4     PCINT20 XCK     T0 
-3   GND
-4   VCC
-5   GND
-6   VCC
-7   PB6     PCINT6  XTAL1   TOSC1 
-8   PB7     PCINT7  XTAL2   TOSC2 
-
-9   PD5     PCINT21 OC0B    T1
-10  PD6     PCINT22 OC0A    AIN0
-11  PD7     PCINT23         AIN1
-12  PB0     PCINT0  CLKO    ICP1
-13  PB1     PCINT1  OC1A
-14  PB2     PCINT2  OC1B    SS
-15  PB3     PCINT3  OC2A    MOSI
-16  PB4     PCINT4          MISO
-
-17  PB5     PCINT5          SCK
-18  AVCC
-19  ADC6
-20  AREF
-21  GND
-22  ADC7
-23  PC0     PCINT8  ADC0
-24  PC1     PCINT9  ADC1
-
-25  PC2     PCINT10 ADC2
-26  PC3     PCINT11 ADC3
-27  PC4     PCINT12 ADC4    SDA
-28  PC5     PCINT13 ADC5    SCL
-29  PC6     PCINT14         RESET
-30  PD0     PCINT16         RXD
-31  PD1     PCINT17         TXD
-32  PD2     PCINT18         INT0
+Pin Port    Descriptions            arduino   WarmDirt 
+-----------------------------------------------------------------------
+1   PD3     PCINT19 OC2B  INT1 PWM2 D3      | ID  motor encoder b
+2   PD4     PCINT20 XCK   T0        D4      | OD  heater control
+3   GND                             GND     | P   gnd
+4   VCC                             VCC     | P   vcc
+5   GND                             GND     | P   gnd
+6   VCC                             VCC     | P   vcc
+7   PB6     PCINT6  XTAL1 TOSC1     XTAL1   | C   xtal1
+8   PB7     PCINT7  XTAL2 TOSC2     XTAL2   | C   xtal2
+-----------------------------------------------------------------------
+9   PD5     PCINT21 OC0B  T1   PWM0 D5      | O   motor a enable
+10  PD6     PCINT22 OC0A  AIN0 PWM0 D6      | O   motor b enable
+11  PD7     PCINT23       AIN1      D7      | O   motor a direction
+12  PB0     PCINT0  CLKO  ICP1      D8      | O   motor b direction
+13  PB1     PCINT1  OC1A       PWM1 D9      | I/O box interior humidity 
+14  PB2     PCINT2  OC1B  SS   PWM1 D10     | 
+15  PB3     PCINT3  OC2A  MOSI PWM2 D11     | ID  lid closed switch
+16  PB4     PCINT4        MISO      D12     |
+-----------------------------------------------------------------------
+17  PB5     PCINT5        SCK       D13     |
+18                  AVCC            AVCC    | IA  avcc
+19                  ADC6            A6      | IA  ambient light
+20                  AREF            AREF    | IA  aref
+21  GND                             GND     | P   gnd  
+22                  ADC7            A7      | IA  heater current
+23  PC0     PCINT8  ADC0            A0      | IA  heated dirt temp
+24  PC1     PCINT9  ADC1            A1      | IA  potted dirt temp
+-----------------------------------------------------------------------
+25  PC2     PCINT10 ADC2            A2      | IA  box interior temp
+26  PC3     PCINT11 ADC3            A3      | IA  box exterior temp
+27  PC4     PCINT12 ADC4  SDA       A4      | 
+28  PC5     PCINT13 ADC5  SCL       A5      |
+29  PC6     PCINT14       RESET     /RESET  | ID  reset
+30  PD0     PCINT16       RXD       D0      | ID  rxd to xbee txd
+31  PD1     PCINT17       TXD       D1      | OD  txd to xbee rxd
+32  PD2     PCINT18       INT0      D2      | ID  motor encoder a
+-----------------------------------------------------------------------
 
 
