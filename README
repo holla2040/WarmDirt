@@ -26,3 +26,61 @@ Requirements
         Arduino compatible using ATMEGA328P
         
 
+
+ATMEGA328P pin mapping
+
+                                    +-\/-+
+        /RESET                PC6  1|    |28  PC5 (AI 5)     ADC5 SCL PCINT13
+        RXD             (D 0) PD0  2|    |27  PC4 (AI 4)     ADC4 SDA PCINT12
+        TXD             (D 1) PD1  3|    |26  PC3 (AI 3)     ADC3 
+ENCA    INT0            (D 2) PD2  4|    |25  PC2 (AI 2)     ADC2 Int  Temp
+ENCB    INT1            (D 3) PD3  5|    |24  PC1 (AI 1)     ADC1 Pot  Temp
+                        (D 4) PD4  6|    |23  PC0 (AI 0)     ADC0 Dirt Temp
+                              VCC  7|    |22  GND
+                              GND  8|    |21  AREF
+        XTAL1                 PB6  9|    |20  AVCC
+        XTAL2                 PB7 10|    |19  PB5 (D 13)     SCK      PCINT5
+PCINT21 OCOB T1    PWM+ (D 5) PD5 11|    |18  PB4 (D 12)     MISO     PCINT4
+PCINT22 OC0A AIN0  PWM+ (D 6) PD6 12|    |17  PB3 (D 11) PWM MOSI     PCINT3
+PCINT23      AIN1       (D 7) PD7 13|    |16  PB2 (D 10) PWM /SS OC1B PCINT2
+PCINT0 CLK0  ICP1       (D 8) PB0 14|    |15  PB1 (D 9)  PWM     OC1A PCINT1
+                                    +----+
+
+
+
+P
+1   PD3 (PCINT19/OC2B/INT1)
+2   PD4 (PCINT20/XCK/T0) 
+3   GND
+4   VCC
+5   GND
+6   VCC
+7   PB6 (PCINT6/XTAL1/TOSC1) 
+8   PB7 (PCINT7/XTAL2/TOSC2) 
+
+9   PD5 (PCINT21/OC0B/T1) PD5
+10  PD6 (PCINT22/OC0A/AIN0) PD6
+11  PD7 (PCINT23/AIN1) PD7
+12  (PCINT0/CLKO/ICP1) PB0
+13  (PCINT1/OC1A) PB1
+14  (PCINT2/SS/OC1B) PB2
+15  (PCINT3/OC2A/MOSI) PB3
+16  (PCINT4/MISO) PB4
+
+17  PB5 (SCK/PCINT5)
+18  AVCC
+19  ADC6
+20  AREF
+21  GND
+22  ADC7
+23  PC0 (ADC0/PCINT8)
+24  PC1 (ADC1/PCINT9)
+
+25  PC2 (ADC2/PCINT10)
+26  PC3 (ADC3/PCINT11)
+27  PC4 (ADC4/SDA/PCINT12)
+28  PC5 (ADC5/SCL/PCINT13)
+29  PC6 (RESET/PCINT14)
+30  PD0 (RXD/PCINT16)
+31  PD1 (TXD/PCINT17)
+32  PD2 (INT0/PCINT18)
