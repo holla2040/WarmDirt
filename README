@@ -9,6 +9,8 @@ Requirements
             Potted dirt
             Box interior air
             Box exterior air
+            Aux temp 
+            Aux temp 
         Humidity 
             Box Interior
         Ambient light
@@ -16,7 +18,8 @@ Requirements
         Heater current monitor
 
     Control
-        Heater
+        Heater 0
+        Heater 1
         DC Motor
 
     Communication
@@ -31,7 +34,7 @@ ATMEGA328P pin mapping
 Pin Port    Descriptions            arduino   WarmDirt 
 -----------------------------------------------------------------------
 1   PD3     PCINT19 OC2B  INT1 PWM2 D3      | ID  motor encoder b
-2   PD4     PCINT20 XCK   T0        D4      | OD  heater control
+2   PD4     PCINT20 XCK   T0        D4      | OD  heater 0 control
 3   GND                             GND     | P   gnd
 4   VCC                             VCC     | P   vcc
 5   GND                             GND     | P   gnd
@@ -44,7 +47,7 @@ Pin Port    Descriptions            arduino   WarmDirt
 11  PD7     PCINT23       AIN1      D7      | O   motor a direction
 12  PB0     PCINT0  CLKO  ICP1      D8      | O   motor b direction
 13  PB1     PCINT1  OC1A       PWM1 D9      | I/O box interior humidity 
-14  PB2     PCINT2  OC1B  SS   PWM1 D10     | 
+14  PB2     PCINT2  OC1B  SS   PWM1 D10     | OD  heater 1 control
 15  PB3     PCINT3  OC2A  MOSI PWM2 D11     | ID  lid closed switch
 16  PB4     PCINT4        MISO      D12     |
 -----------------------------------------------------------------------
@@ -59,8 +62,8 @@ Pin Port    Descriptions            arduino   WarmDirt
 -----------------------------------------------------------------------
 25  PC2     PCINT10 ADC2            A2      | IA  box interior temp
 26  PC3     PCINT11 ADC3            A3      | IA  box exterior temp
-27  PC4     PCINT12 ADC4  SDA       A4      | 
-28  PC5     PCINT13 ADC5  SCL       A5      |
+27  PC4     PCINT12 ADC4  SDA       A4      | IA  aux temp 
+28  PC5     PCINT13 ADC5  SCL       A5      | IA  aux temp
 29  PC6     PCINT14       RESET     /RESET  | ID  reset
 30  PD0     PCINT16       RXD       D0      | ID  rxd to xbee txd
 31  PD1     PCINT17       TXD       D1      | OD  txd to xbee rxd
