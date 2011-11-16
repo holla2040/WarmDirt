@@ -34,7 +34,7 @@ ATMEGA328P pin mapping
 Pin Port    Descriptions            arduino   WarmDirt 
 -----------------------------------------------------------------------
 1   PD3     PCINT19 OC2B  INT1 PWM2 D3      | ID  motor encoder b
-2   PD4     PCINT20 XCK   T0        D4      | OD  heater 0 control
+2   PD4     PCINT20 XCK   T0        D4      | OD  load 0 enable
 3   GND                             GND     | P   gnd
 4   VCC                             VCC     | P   vcc
 5   GND                             GND     | P   gnd
@@ -47,7 +47,7 @@ Pin Port    Descriptions            arduino   WarmDirt
 11  PD7     PCINT23       AIN1      D7      | O   motor a direction
 12  PB0     PCINT0  CLKO  ICP1      D8      | O   motor b direction
 13  PB1     PCINT1  OC1A       PWM1 D9      | I/O box interior humidity 
-14  PB2     PCINT2  OC1B  SS   PWM1 D10     | OD  heater 1 control
+14  PB2     PCINT2  OC1B  SS   PWM1 D10     | OD  load 1 enable
 15  PB3     PCINT3  OC2A  MOSI PWM2 D11     | ID  lid closed switch
 16  PB4     PCINT4        MISO      D12     |
 -----------------------------------------------------------------------
@@ -56,7 +56,7 @@ Pin Port    Descriptions            arduino   WarmDirt
 19                  ADC6            A6      | IA  ambient light
 20                  AREF            AREF    | IA  aref
 21  GND                             GND     | P   gnd  
-22                  ADC7            A7      | IA  heater current
+22                  ADC7            A7      | IA  load current
 23  PC0     PCINT8  ADC0            A0      | IA  heated dirt temp
 24  PC1     PCINT9  ADC1            A1      | IA  potted dirt temp
 -----------------------------------------------------------------------
