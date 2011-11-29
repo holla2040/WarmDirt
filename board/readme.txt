@@ -28,8 +28,6 @@ fudicials at
 
 layer stack up sequence
     top     x.cmp
-    inner 1 x.ly2
-    inner 2 x.l15
     bottom  x.sol
 
 contact info
