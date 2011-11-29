@@ -7,20 +7,15 @@ version
 git location
     https://github.com/rethinksun/WarmDirt
 
-description
-    2 layer board
-        cmp component side
-        crc component cream
-        crs solder cream
-        drd drill data
-        dri drill info
-        gpi gerber info
-        plc component side silkscreen
-        pls solder side silkscreen
-        sol solder side
-        stc component side solder stop mask
-        sts solder side solder stop mask
-        readme.txt info, has fudicial info
+description - iteadstudio
+    Top layer:                  pcbname.GTL
+    Bottom layer:               pcbname.GBL
+    Solder Stop Mask top:       pcbname.GTS
+    Solder Stop Mask Bottom:    pcbname.GBS
+    Silk Top:                   pcbname.GTO
+    Silk Bottom:                pcbname.GBO
+    NC Drill:                   pcbname.TXT
+    readme.txt                  info, has fudicial info
 
 fudicials at
     7.62mm x 7.62mm

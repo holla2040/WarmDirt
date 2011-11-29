@@ -1,0 +1,2 @@
+to get solder mask fit around prototype area
+    set DRC:Masks:Limit=20mil
