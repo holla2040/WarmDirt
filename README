@@ -74,6 +74,7 @@ Pin Port    Descriptions            arduino   WarmDirt
 
 v1.1
     added pot to vrefs on motor driver 
+    reworked sense resistor, see Figure 34 in ST AN1762
 
 v1.0
     initial addition
