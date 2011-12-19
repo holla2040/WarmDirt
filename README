@@ -71,3 +71,10 @@ Pin Port    Descriptions            arduino   WarmDirt
 -----------------------------------------------------------------------
 
 
+
+v1.1
+    added pot to vrefs on motor driver 
+
+v1.0
+    initial addition
+
