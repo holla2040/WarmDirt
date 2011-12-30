@@ -32,12 +32,13 @@ class WarmDirt {
         double      getAux1Temperature();
         uint16_t    getLightSensor();
         boolean     getLidSwitch();
-        double      getDHT12Temperature();
-        double      getDHT12Humidity();
+        double      getDHTTemperature();
+        double      getDHTHumidity();
         double      getLoadCurrent();
         
         void        setLoad0Enable(uint8_t enable);
         void        setLoad1Enable(uint8_t enable);
+        double      ctof(double c);
     private:
         uint16_t    adcaverage(uint8_t pin, uint16_t samples);
         double      adctotemp(uint16_t adc,double seriesResistance);

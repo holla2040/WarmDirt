@@ -2,6 +2,12 @@
 #include <stdint.h>
 
 #include "WarmDirt.h"
+#include "DHT.h"
+
+#define DHTPIN  9
+#define DHTTYPE DHT11 
+
+DHT dht(DHTPIN, DHTTYPE);
 
 WarmDirt::WarmDirt(double srhd, double srpd, double srbi, double srbe, double sra0, double sra1) {
     _seriesResistorHeatedDirt   = srhd;
@@ -12,6 +18,7 @@ WarmDirt::WarmDirt(double srhd, double srpd, double srbi, double srbe, double sr
     _seriesResistorAux1         = sra1;
 
     pinMode(PINLIDSWITCH,INPUT);
+    dht.begin();
 }
 
 uint16_t WarmDirt::adcaverage(uint8_t pin, uint16_t samples) {
@@ -32,14 +39,18 @@ double  WarmDirt::adctotemp(uint16_t adc, double seriesResistance) {
     thermalr = 1023.0 / float(adc) - 1;
     thermalr = seriesResistance / thermalr;
  
-    steinhart = thermalr / THERMISTORNOMINAL;              // (R/Ro)
+    steinhart = thermalr / THERMISTORNOMINAL;         // (R/Ro)
     steinhart = log(steinhart);                       // ln(R/Ro)
     steinhart /= BCOEFFICIENT;                        // 1/B * ln(R/Ro)
     steinhart += 1.0 / (TEMPERATURENOMINAL + 273.15); // + (1/To)
     steinhart = 1.0 / steinhart;                      // Invert
     steinhart -= 273.15;                              // convert to C
-    steinhart = 9.0*steinhart/5.0+32.0;               // convert to F
+    steinhart = ctof(steinhart);                      // convert to f
     return steinhart;
+}
+
+double WarmDirt::ctof(double c) {
+    return 9.0*c/5.0+32.0; 
 }
 
 double  WarmDirt::getHeatedDirtTemperature() {
@@ -75,12 +86,13 @@ boolean WarmDirt::getLidSwitch() {
     return digitalRead(PINLIDSWITCH);
 }
 
-double  WarmDirt::getDHT12Temperature() {
-    return 0.00;
+/* ref http://www.ladyada.net/learn/sensors/dht.html */
+double  WarmDirt::getDHTTemperature() {
+    return ctof(dht.readTemperature());
 }
 
-double  WarmDirt::getDHT12Humidity() {
-    return 0.00;
+double  WarmDirt::getDHTHumidity() {
+    return dht.readHumidity();
 }
 
 double  WarmDirt::getLoadCurrent() {
@@ -92,4 +104,3 @@ void    WarmDirt::setLoad0Enable(uint8_t enable) {
 
 void    WarmDirt::setLoad1Enable(uint8_t enable) {
 }
-
