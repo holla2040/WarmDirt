@@ -13,6 +13,11 @@
 #define PINLIGHTSENSOR      A6
 #define PINLOADCURRENT      A7
 
+#define PINMOTORAIN         7
+#define PINMOTORAENABLE     5
+#define PINMOTORBIN         8
+#define PINMOTORBENABLE     6
+
 #define PINLIDSWITCH        11
 #define PINACTIVITY         13
 #define PINLOAD0ENABLE      4
@@ -24,6 +29,18 @@
 #define THERMISTORNOMINAL   10000      
 #define TEMPERATURENOMINAL  25   
 #define BCOEFFICIENT        3950
+
+#define MOTORSPEEDINC       5
+
+enum{F62500,F7813,F977,F244,F61};
+/** Frequencies available
+    timer 0 - pins 5,6 - 62500Hz
+    1       F62500
+    8       F7813
+    64      F977
+    256     F244
+    1024    F61
+*/
 
 class WarmDirt {
     public:
@@ -47,6 +64,10 @@ class WarmDirt {
         void        load1On();
         void        load1Off();
         boolean     getLoad1On();
+
+        int8_t      motorASpeed(int8_t speed);
+        int8_t      motorBSpeed(int8_t speed);
+        void        setPwmFrequency(uint8_t frequency);
 
         void        activityToggle();
 

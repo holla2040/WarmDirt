@@ -1,11 +1,14 @@
-#include "WarmDirt.h"
 #include <stdint.h>
+#include "WarmDirt.h"
 
 #define STATUSUPDATEINVTERVAL   5000
 #define ACTIVITYUPDATEINVTERVAL 500
 
 uint32_t nextIdleStatusUpdate;
 uint32_t nextActivityUpdate;
+
+int8_t   speedA = 0;
+int8_t   speedB = 0;
 
 WarmDirt wd;
 
@@ -23,7 +26,7 @@ void commProcess(int c) {
         case 'R':
             reset();
             break;
-        case 'l':
+        case 'a':
             Serial.print("l");
             while (!Serial.available()) ;
             c = Serial.read();
@@ -52,6 +55,37 @@ void commProcess(int c) {
                 }
             }
             Serial.println();
+            break;
+        case 'i':
+            speedB += MOTORSPEEDINC; 
+            speedB = wd.motorBSpeed(speedB);
+            Serial.print("b = ");
+            Serial.println(speedB);
+            break;
+        case 'k':
+            speedB -= MOTORSPEEDINC; 
+            speedB = wd.motorBSpeed(speedB);
+            Serial.print("b = ");
+            Serial.println(speedB);
+            break;
+        case 'j':
+            speedA += MOTORSPEEDINC; 
+            speedA = wd.motorASpeed(speedA);
+            Serial.print("a = ");
+            Serial.println(speedA);
+            break;
+        case 'l':
+            speedA -= MOTORSPEEDINC; 
+            speedA = wd.motorASpeed(speedA);
+            Serial.print("a = ");
+            Serial.println(speedA);
+            break;
+        case ' ':
+            Serial.println("full stop");
+            speedA = 0;
+            speedB = 0;
+            wd.motorASpeed(speedA);
+            wd.motorBSpeed(speedB);
             break;
    }
 }
@@ -94,6 +128,10 @@ void statusLoop() {
         Serial.print(wd.getLoad1On(),DEC);
         Serial.print(" ");
         Serial.print(wd.getLoadCurrent(),0);
+        Serial.print(" ");
+        Serial.print(speedA,DEC);
+        Serial.print(" ");
+        Serial.print(speedB,DEC);
 
         Serial.println();
         nextIdleStatusUpdate = now + STATUSUPDATEINVTERVAL;

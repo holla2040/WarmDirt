@@ -84,6 +84,9 @@ v1.1
     added more isolation around mounting screws
     changed lightsensor bias resistor to 10K
     added a LED to lidswitch input
+    added pulldown resistors to motor A/B enables
+    changed the interface circuit between cpu and motor enable
+    added motor A and motor B silk label
 
 v1.0
     initial addition

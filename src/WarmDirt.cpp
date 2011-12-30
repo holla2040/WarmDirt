@@ -23,10 +23,20 @@ WarmDirt::WarmDirt(double srhd, double srpd, double srbi, double srbe, double sr
     pinMode(PINLOAD0ENABLE, OUTPUT);
     pinMode(PINLOAD1ENABLE, OUTPUT);
 
+    pinMode(PINMOTORAIN,        OUTPUT);
+    pinMode(PINMOTORAENABLE,    OUTPUT); /* pwm */
+    pinMode(PINMOTORBIN,        OUTPUT); 
+    pinMode(PINMOTORBENABLE,    OUTPUT); /* pwm */
+
     digitalWrite(PINACTIVITY, HIGH);
 
     load0Off(); 
     load1Off(); 
+
+    motorASpeed(0);
+    motorBSpeed(0);
+
+    setPwmFrequency(F977); /* arduino code sets to F977 for millis and delay to function, change at your own risk */
 
     dht.begin();
 }
@@ -135,5 +145,77 @@ boolean WarmDirt::getLoad1On() {
 
 void    WarmDirt::activityToggle() {
     digitalWrite(PINACTIVITY,!digitalRead(PINACTIVITY));
+}
+
+int8_t  WarmDirt::motorASpeed(int8_t speed) {
+    uint8_t duty;
+    if (speed > 100) {
+        speed = 100;
+    }
+    if (speed < -100) {
+        speed = -100;
+    }
+
+    if (speed == 0) {
+        digitalWrite(PINMOTORAENABLE,LOW);
+    } else {
+        if (speed > 0) {
+            digitalWrite(PINMOTORAIN,HIGH);
+        } else {
+            digitalWrite(PINMOTORAIN,LOW);
+        }
+        duty = map(abs(speed), 0, 100, 0, 255);
+        //Serial.println(duty,DEC);
+        analogWrite(PINMOTORAENABLE,duty);
+    }
+    return speed;
+}
+    
+
+int8_t  WarmDirt::motorBSpeed(int8_t speed) {
+    uint8_t duty;
+    if (speed > 100) {
+        speed = 100;
+    }
+    if (speed < -100) {
+        speed = -100;
+    }
+
+    if (speed == 0) {
+        digitalWrite(PINMOTORBENABLE,LOW);
+    } else {
+        if (speed > 0) {
+            digitalWrite(PINMOTORBIN,HIGH);
+        } else {
+            digitalWrite(PINMOTORBIN,LOW);
+        }
+        duty = map(abs(speed), 0, 100, 0, 255);
+        //Serial.println(duty,DEC);
+        analogWrite(PINMOTORBENABLE,duty);
+    }
+    return speed;
+}
+
+void    WarmDirt::setPwmFrequency(uint8_t frequency) {
+    uint8_t mode;
+    // timer 0 - 5,6  62500Hz
+    switch (frequency) {
+        case F62500:
+            mode = 0x01;
+            break;
+        case F7813:
+            mode = 0x02;
+            break;
+        case F977:
+            mode = 0x03;
+            break;
+        case F244:
+            mode = 0x04;
+            break;
+        case F61:
+            mode = 0x05;
+            break;
+    }
+    TCCR0B = (TCCR0B & 0b11111000) | mode; // Timer 0
 }
 
