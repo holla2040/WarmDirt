@@ -82,6 +82,7 @@ v1.1
     changed snubber cap value to 2200pF
     fixed open hardware on top silk
     added more isolation around mounting screws
+    changed lightsensor bias resistor to 10K
 
 v1.0
     initial addition
