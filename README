@@ -83,6 +83,7 @@ v1.1
     fixed open hardware on top silk
     added more isolation around mounting screws
     changed lightsensor bias resistor to 10K
+    added a LED to lidswitch input
 
 v1.0
     initial addition

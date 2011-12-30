@@ -17,7 +17,17 @@ WarmDirt::WarmDirt(double srhd, double srpd, double srbi, double srbe, double sr
     _seriesResistorAux0         = sra0;
     _seriesResistorAux1         = sra1;
 
-    pinMode(PINLIDSWITCH,INPUT);
+    pinMode(PINLIDSWITCH,   INPUT);
+    pinMode(PINACTIVITY,    OUTPUT);
+
+    pinMode(PINLOAD0ENABLE, OUTPUT);
+    pinMode(PINLOAD1ENABLE, OUTPUT);
+
+    digitalWrite(PINACTIVITY, HIGH);
+
+    load0Off(); 
+    load1Off(); 
+
     dht.begin();
 }
 
@@ -82,8 +92,8 @@ uint16_t  WarmDirt::getLightSensor() {
     return adcaverage(PINLIGHTSENSOR,SAMPLES);
 }
 
-boolean WarmDirt::getLidSwitch() {
-    return digitalRead(PINLIDSWITCH);
+boolean WarmDirt::getLidSwitchClosed() {
+    return !digitalRead(PINLIDSWITCH);
 }
 
 /* ref http://www.ladyada.net/learn/sensors/dht.html */
@@ -96,11 +106,34 @@ double  WarmDirt::getDHTHumidity() {
 }
 
 double  WarmDirt::getLoadCurrent() {
-    return 0.00;
+    return adcaverage(PINLOADCURRENT,SAMPLES);
 }
 
-void    WarmDirt::setLoad0Enable(uint8_t enable) {
+void    WarmDirt::load0Off() {
+    digitalWrite(PINLOAD0ENABLE,HIGH);
 }
 
-void    WarmDirt::setLoad1Enable(uint8_t enable) {
+void    WarmDirt::load0On() {
+    digitalWrite(PINLOAD0ENABLE,LOW);
 }
+
+boolean WarmDirt::getLoad0On() {
+    return !digitalRead(PINLOAD0ENABLE);
+}
+
+void    WarmDirt::load1Off() {
+    digitalWrite(PINLOAD1ENABLE,HIGH);
+}
+
+void    WarmDirt::load1On() {
+    digitalWrite(PINLOAD1ENABLE,LOW);
+}
+
+boolean WarmDirt::getLoad1On() {
+    return !digitalRead(PINLOAD1ENABLE);
+}
+
+void    WarmDirt::activityToggle() {
+    digitalWrite(PINACTIVITY,!digitalRead(PINACTIVITY));
+}
+

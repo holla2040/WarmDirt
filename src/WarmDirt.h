@@ -11,8 +11,12 @@
 #define PINAUX0             A4
 #define PINAUX1             A5
 #define PINLIGHTSENSOR      A6
+#define PINLOADCURRENT      A7
 
 #define PINLIDSWITCH        11
+#define PINACTIVITY         13
+#define PINLOAD0ENABLE      4
+#define PINLOAD1ENABLE      10
 
 #define SAMPLES             10
 
@@ -31,19 +35,25 @@ class WarmDirt {
         double      getAux0Temperature();
         double      getAux1Temperature();
         uint16_t    getLightSensor();
-        boolean     getLidSwitch();
+        boolean     getLidSwitchClosed();
         double      getDHTTemperature();
         double      getDHTHumidity();
         double      getLoadCurrent();
         
-        void        setLoad0Enable(uint8_t enable);
-        void        setLoad1Enable(uint8_t enable);
+        void        load0On();
+        void        load0Off();
+        boolean     getLoad0On();
+
+        void        load1On();
+        void        load1Off();
+        boolean     getLoad1On();
+
+        void        activityToggle();
+
         double      ctof(double c);
     private:
         uint16_t    adcaverage(uint8_t pin, uint16_t samples);
         double      adctotemp(uint16_t adc,double seriesResistance);
-        uint8_t     _load0Enabled;
-        uint8_t     _load1Enabled;
         double      _seriesResistorHeatedDirt;
         double      _seriesResistorPottedDirt;
         double      _seriesResistorBoxInterior;
