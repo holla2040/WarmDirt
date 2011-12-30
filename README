@@ -77,6 +77,11 @@ v1.1
     reworked sense resistor, see Figure 34 in ST AN1762
     added resistors to +12 regulator to use variable regulator LM1084 5A part
     connected +5 regulator input to +12V to lower power dissipation in +5 reg
+    changed thermistor resistors to 10K
+    added pin 1 marker to L6207D silk
+    changed snubber cap value to 2200pF
+    fixed open hardware on top silk
+    added more isolation around mounting screws
 
 v1.0
     initial addition
