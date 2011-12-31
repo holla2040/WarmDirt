@@ -100,26 +100,36 @@ void commLoop() {
 
 void statusLoop() {
     uint32_t now = millis();
+    double hd,pd,bi,be,lc,hum;
     if (now > nextActivityUpdate) {
         wd.activityToggle();
         nextActivityUpdate = now + ACTIVITYUPDATEINVTERVAL;
     }
 
     if (now > nextIdleStatusUpdate) {
+        hd  = wd.getHeatedDirtTemperature();
+        pd  = wd.getPottedDirtTemperature();
+        bi  = wd.getBoxInteriorTemperature();
+        be  = wd.getBoxExteriorTemperature();
+        lc  = wd.getLoadCurrent();
+        hum = wd.getDHTHumidity();
 
-        Serial.print(wd.getHeatedDirtTemperature(),0);
+
+        Serial.print(now,DEC);
         Serial.print(" ");
-        Serial.print(wd.getPottedDirtTemperature(),0);
+        Serial.print(hd,0);
         Serial.print(" ");
-        Serial.print(wd.getBoxInteriorTemperature(),0);
+        Serial.print(pd,0);
         Serial.print(" ");
-        Serial.print(wd.getBoxExteriorTemperature(),0);
+        Serial.print(bi,0);
+        Serial.print(" ");
+        Serial.print(be,0);
         Serial.print(" ");
         Serial.print(wd.getLightSensor());
         Serial.print(" ");
 //        Serial.print(wd.getDHTTemperature(),0);
 //        Serial.print(" ");
-        Serial.print(wd.getDHTHumidity(),0);
+        Serial.print(hum,0);
         Serial.print(" ");
         Serial.print(wd.getLidSwitchClosed(),DEC);
         Serial.print(" ");
@@ -127,7 +137,7 @@ void statusLoop() {
         Serial.print(" ");
         Serial.print(wd.getLoad1On(),DEC);
         Serial.print(" ");
-        Serial.print(wd.getLoadCurrent(),0);
+        Serial.print(lc,0);
         Serial.print(" ");
         Serial.print(speedA,DEC);
         Serial.print(" ");
