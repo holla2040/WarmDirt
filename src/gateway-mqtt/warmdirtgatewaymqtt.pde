@@ -7,6 +7,11 @@
 #define MQTTUSER    "1001warmdirt1"
 #define MQTTPREFIX  "us/co/montrose/1001s2nd/warmdirt"
 
+#define UPTIMEUPDATEINVTERVAL 60000
+
+uint32_t nextUptimeUpdate;
+
+
 /* 
     print debug log connect usb-ftdi-RX to A0 at 9600 8N1
 */
@@ -40,10 +45,8 @@ void mqttprocess(char *topic, byte * payload, int length) {
 
 PubSubClient mqtt(mqttserver, 1883, mqttprocess);
 
-unsigned long next;
-
-void publish(char *k,char *v) {
-    sprintf(key,"%s/%s",MQTTPREFIX,k);
+void publish(char *prefix, char *k,char *v) {
+    sprintf(key,"%s/%s",prefix,k);
     mqtt.publish(key,v);
     sprintf(key,"published %s/%s=%s",MQTTPREFIX,k,v);
     debug.println(key);
@@ -61,7 +64,7 @@ void mqttconnect() {
         debug.print("subscribed to ");
         debug.println(line);
 
-        publish("gateway","startup");
+        publish("us/co/montrose/1001s2nd","gateway/begin","1");
 
         mqttconnected = 1;
     } else {
@@ -72,11 +75,13 @@ void mqttconnect() {
 
 void setup() {
     Serial.begin(57600);
-    debug.begin(9600);
+    debug.begin(38400);
     debug.println("\n\nwarmdirtgatewaymqtt begin");
 
     Ethernet.begin(mac, ip, gateway);
+    delay(3000); // wait a bit for wiz to come up
     lineindex = 0;
+    nextUptimeUpdate = 0;
     mqttconnect();
 }
 
@@ -95,16 +100,27 @@ void commloop() {
             line[lineindex] = 0;
             debug.print("srecieved ");
             debug.println(line);
-            publish(strtok(line,"="),strtok(NULL,"="));
+            publish(MQTTPREFIX,strtok(line,"="),strtok(NULL,"="));
             lineindex = 0;
             return;
         }
         line[lineindex++] = c;
     }
 }
-        
+
+void statusloop() {
+    unsigned long now = millis();
+    char v[40];
+
+    if (now > nextUptimeUpdate) {
+        sprintf(v,"%u",now);
+        publish("us/co/montrose/1001s2nd","gateway/uptime",v);
+        nextUptimeUpdate = now + UPTIMEUPDATEINVTERVAL;
+    }
+}
 
 void loop() {
     mqttloop();
     commloop();
+    statusloop();
 }

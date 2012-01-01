@@ -87,6 +87,8 @@ v1.1
     added pulldown resistors to motor A/B enables
     changed the interface circuit between cpu and motor enable
     added motor A and motor B silk label
+    added a resistor at xbee dout for foca flashing without xbee removal
+    disconnected the foca vcc from board connector, foca was powering board
 
 v1.0
     initial addition

@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include "WarmDirt.h"
 
-#define STATUSUPDATEINVTERVAL   5000
+#define STATUSUPDATEINVTERVAL   15000
 #define ACTIVITYUPDATEINVTERVAL 500
 
 uint32_t nextIdleStatusUpdate;
@@ -18,7 +18,7 @@ void reset() {
 
 void setup() {                
     Serial.begin(57600);
-    Serial.println("warmdirt begin");
+    Serial.println("1/data/begin=1");
 }
 
 void commProcess(int c) {
@@ -114,37 +114,59 @@ void statusLoop() {
         lc  = wd.getLoadCurrent();
         hum = wd.getDHTHumidity();
 
+        Serial.print("1/data/uptime=");
+        Serial.println(now,DEC);
+        delay(200);
 
-        Serial.print(now,DEC);
-        Serial.print(" ");
-        Serial.print(hd,0);
-        Serial.print(" ");
-        Serial.print(pd,0);
-        Serial.print(" ");
-        Serial.print(bi,0);
-        Serial.print(" ");
-        Serial.print(be,0);
-        Serial.print(" ");
-        Serial.print(wd.getLightSensor());
-        Serial.print(" ");
-//        Serial.print(wd.getDHTTemperature(),0);
-//        Serial.print(" ");
-        Serial.print(hum,0);
-        Serial.print(" ");
-        Serial.print(wd.getLidSwitchClosed(),DEC);
-        Serial.print(" ");
-        Serial.print(wd.getLoad0On(),DEC);
-        Serial.print(" ");
-        Serial.print(wd.getLoad1On(),DEC);
-        Serial.print(" ");
-        Serial.print(lc,0);
-        Serial.print(" ");
-        Serial.print(speedA,DEC);
-        Serial.print(" ");
-        Serial.print(speedB,DEC);
+        Serial.print("1/data/temperatureheateddirt=");
+        Serial.println(hd,0);
+        delay(200);
 
-        Serial.println();
-        nextIdleStatusUpdate = now + STATUSUPDATEINVTERVAL;
+        Serial.print("1/data/temperaturepotteddirt=");
+        Serial.println(pd,0);
+        delay(200);
+
+        Serial.print("1/data/temperatureboxinterior=");
+        Serial.println(bi,0);
+        delay(200);
+
+        Serial.print("1/data/temperatureboxexterior=");
+        Serial.println(be,0);
+        delay(200);
+
+        Serial.print("1/data/lightsensor=");
+        Serial.println(wd.getLightSensor());
+        delay(200);
+
+        Serial.print("1/data/humidity=");
+        Serial.println(hum,0);
+        delay(200);
+
+        Serial.print("1/data/lidswitch=");
+        Serial.println(wd.getLidSwitchClosed(),DEC);
+        delay(200);
+
+        Serial.print("1/data/load0on=");
+        Serial.println(wd.getLoad0On(),DEC);
+        delay(200);
+
+        Serial.print("1/data/load1on=");
+        Serial.println(wd.getLoad1On(),DEC);
+        delay(200);
+
+        Serial.print("1/data/loadcurrent=");
+        Serial.println(lc,0);
+        delay(200);
+
+        Serial.print("1/data/motoraspeed=");
+        Serial.println(speedA,DEC);
+        delay(200);
+
+        Serial.print("1/data/motorbspeed=");
+        Serial.println(speedB,DEC);
+        delay(200);
+
+        nextIdleStatusUpdate = millis() + STATUSUPDATEINVTERVAL;
     }
 }
 
