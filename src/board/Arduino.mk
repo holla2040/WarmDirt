@@ -422,8 +422,10 @@ $(DEP_FILE):	$(OBJDIR) $(DEPS)
 upload:		reset raw_upload
 
 raw_upload:	$(TARGET_HEX)
-		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) \
-			-U flash:w:$(TARGET_HEX):i
+		$(AVRDUDE) $(AVRDUDE_COM_OPTS) $(AVRDUDE_ARD_OPTS) -U flash:w:$(TARGET_HEX):i
+
+tcp_upload:	$(TARGET_HEX)
+		$(AVRDUDE) $(AVRDUDE_COM_OPTS) -c $(AVRDUDE_ARD_PROGRAMMER) -b $(AVRDUDE_ARD_BAUDRATE) -P $(TCP_PORT) -U flash:w:$(TARGET_HEX):i
 
 # stty on MacOS likes -F, but on Debian it likes -f redirecting
 # stdin/out appears to work but generates a spurious error on MacOS at

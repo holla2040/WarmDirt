@@ -27,7 +27,7 @@ void commProcess(int c) {
             reset();
             break;
         case 'a':
-            Serial.print("l");
+            Serial.print("a");
             while (!Serial.available()) ;
             c = Serial.read();
             Serial.print((char)c);
@@ -87,6 +87,13 @@ void commProcess(int c) {
             wd.motorASpeed(speedA);
             wd.motorBSpeed(speedB);
             break;
+        case '0': // avrdude sends 0-space 
+            while (!Serial.available()) ;
+            c = Serial.read();
+            if (c == ' ') {
+                reset();
+            }
+            break;
    }
 }
 
@@ -134,7 +141,7 @@ void statusLoop() {
         Serial.println(be,1);
         delay(200);
 
-        Serial.print("1/data/lightsensor=");
+        Serial.print("1/data/lightlevel=");
         Serial.println(wd.getLightSensor());
         delay(200);
 

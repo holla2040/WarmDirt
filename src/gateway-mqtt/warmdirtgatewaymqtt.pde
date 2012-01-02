@@ -3,6 +3,7 @@
 #include <PubSubClient.h>
 #include <string.h>
 #include "NewSoftSerial.h"
+#include "socket.h"
 
 #define MQTTUSER    "1001warmdirt1"
 #define MQTTPREFIX  "us/co/montrose/1001s2nd/warmdirt"
@@ -10,7 +11,7 @@
 #define UPTIMEUPDATEINVTERVAL 55000
 
 uint32_t nextUptimeUpdate;
-
+uint32_t tcpTimeout;
 
 /* 
     print debug log connect usb-ftdi-RX to A0 at 9600 8N1
@@ -44,6 +45,8 @@ void mqttprocess(char *topic, byte * payload, int length) {
 }
 
 PubSubClient mqtt(mqttserver, 1883, mqttprocess);
+
+Server tcpserver(1055);
 
 void publish(char *prefix, char *k,char *v) {
     sprintf(key,"%s/%s",prefix,k);
@@ -80,6 +83,7 @@ void setup() {
 
     Ethernet.begin(mac, ip, gateway);
     delay(3000); // wait a bit for wiz to come up
+    tcpserver.begin();
     lineindex = 0;
     nextUptimeUpdate = 0;
     mqttconnect();
@@ -94,12 +98,43 @@ void mqttloop() {
 
 void commloop() {
     int c;
+    char tcpc;
+    uint32_t now = millis();
+
+    Client client = tcpserver.available();
+    if (client) {
+        tcpTimeout = now + 30000;
+        for (;;) {
+            if (client) {
+                tcpc = client.read();
+                if (tcpc != -1) {
+                    Serial.print(tcpc);
+                    //debug.print(">");
+                    //debug.println(tcpc,HEX);
+                }
+                if (Serial.available()) {
+                    c = Serial.read();
+                    tcpserver.write(c);
+                    //debug.print("<");
+                    //debug.println(c,HEX);
+                }
+                if (millis() > tcpTimeout) {
+                    break;
+                }
+            }
+            Client client = tcpserver.available();
+        }
+    }
+
     if (Serial.available()) {
         c = Serial.read();
+        if (c == '\r') {
+            return;
+        }
         if (c == '\n') {
             line[lineindex] = 0;
-            debug.print("srecieved ");
-            debug.println(line);
+            //debug.print("srecieved ");
+            //debug.println(line);
             publish(MQTTPREFIX,strtok(line,"="),strtok(NULL,"="));
             lineindex = 0;
             return;

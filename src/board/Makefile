@@ -17,6 +17,7 @@ AVRDUDE                 = /opt/arduino/hardware/tools/avrdude
                                             
 F_CPU                   = 16000000
 ARDUINO_PORT            = /dev/$(DEVICE_FILE)
+TCP_PORT                = net:192.168.0.10:1055
                                             
 ARDUINO_LIBS            = 
                                             
@@ -30,6 +31,13 @@ run: all
 	echo -en "R" > $(ARDUINO_PORT)
 	sleep 0.5
 	make raw_upload
+	make con
+
+tcp: all
+	#stty -F $(ARDUINO_PORT) $(CONSOLE_BAUDRATE)
+	#echo -en "R" > $(ARDUINO_PORT)
+	#echo -n 'R0 ' | nc 192.168.0.10 1055
+	make tcp_upload
 	make con
 
 con:
