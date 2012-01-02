@@ -5,10 +5,23 @@
 #include "NewSoftSerial.h"
 #include "socket.h"
 
+#define UPTIMEUPDATEINVTERVAL 55000
+
+#define LOCATION 0
+
+#if LOCATION == 0
+
+#define MQTTUSER    "121warmdirt1"
+#define MQTTPREFIX  "us/co/montrose/121 Apollo/warmdirt"
+#define MQTTLOC     "us/co/montrose/121 Apollo"
+
+#else
+
 #define MQTTUSER    "1001warmdirt1"
 #define MQTTPREFIX  "us/co/montrose/1001s2nd/warmdirt"
+#define MQTTLOC     "us/co/montrose/1001s2nd"
 
-#define UPTIMEUPDATEINVTERVAL 55000
+#endif
 
 uint32_t nextUptimeUpdate;
 uint32_t tcpTimeout;
@@ -18,10 +31,17 @@ uint32_t tcpTimeout;
 */
 
 
-byte mac[] =        { 0xDE, 0xAD, 0x33, 0xEF, 0xFE, 0xED };
+byte mac[] =        { 0xDE, 0xAD, 0x42, 0xEF, 0xFE, 0xED };
+
+#if LOCATION == 0
+byte ip[] =         { 10,210,211,249 };
+byte mqttserver[] = { 10,210,211,231 };
+byte gateway[] =    { 10,210,211,1   };
+#else
 byte ip[] =         { 192,168,0,10  };
 byte mqttserver[] = { 192,168,0,117 };
 byte gateway[] =    { 192,168,0,1   };
+#endif
 
 char line[100];
 char key[100];
@@ -67,7 +87,7 @@ void mqttconnect() {
         debug.print("subscribed to ");
         debug.println(line);
 
-        publish("us/co/montrose/1001s2nd","gateway/begin","1");
+        publish(MQTTLOC,"gateway/begin","1");
 
         mqttconnected = 1;
     } else {
@@ -79,10 +99,10 @@ void mqttconnect() {
 void setup() {
     Serial.begin(57600);
     debug.begin(38400);
-    debug.println("\n\nwarmdirtgatewaymqtt begin");
+    debug.println("\n\nwarmdirtgatewaymqtt setup");
 
     Ethernet.begin(mac, ip, gateway);
-    delay(3000); // wait a bit for wiz to come up
+    delay(2500); // wait a bit for wiz to come up
     tcpserver.begin();
     lineindex = 0;
     nextUptimeUpdate = 0;
@@ -149,7 +169,7 @@ void statusloop() {
 
     if (now > nextUptimeUpdate) {
         sprintf(v,"%lu",now);
-        publish("us/co/montrose/1001s2nd","gateway/uptime",v);
+        publish(MQTTLOC,"gateway/uptime",v);
         nextUptimeUpdate = now + UPTIMEUPDATEINVTERVAL;
     }
 }

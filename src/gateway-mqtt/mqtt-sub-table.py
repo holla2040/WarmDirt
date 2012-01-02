@@ -2,9 +2,9 @@
 
 import mosquitto,sys,random
 
-host = "hd"
+host = "horton"
 
-subscribetopic="us/co/montrose/1001s2nd/#"
+subscribetopic="us/co/montrose/#"
 
 data = {}
 
@@ -15,9 +15,9 @@ def showdata(topic):
     keys.sort()
     for k in keys:
         if k == topic:
-            print "\x1b[K%-65s\x1b[7m%s\x1b[0m"%(k,data[k])
+            print "\x1b[K%-65s\x1b[7m%s\x1b[0m"%(k[:64],data[k][:20])
         else:
-            print "\x1b[K%-65s%s"%(k,data[k])
+            print "\x1b[K%-65s%s"%(k[:64],data[k][:20])
 
 
 
