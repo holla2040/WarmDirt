@@ -7,7 +7,7 @@
 #define MQTTUSER    "1001warmdirt1"
 #define MQTTPREFIX  "us/co/montrose/1001s2nd/warmdirt"
 
-#define UPTIMEUPDATEINVTERVAL 60000
+#define UPTIMEUPDATEINVTERVAL 55000
 
 uint32_t nextUptimeUpdate;
 
@@ -113,7 +113,7 @@ void statusloop() {
     char v[40];
 
     if (now > nextUptimeUpdate) {
-        sprintf(v,"%u",now);
+        sprintf(v,"%lu",now);
         publish("us/co/montrose/1001s2nd","gateway/uptime",v);
         nextUptimeUpdate = now + UPTIMEUPDATEINVTERVAL;
     }

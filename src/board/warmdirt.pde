@@ -119,19 +119,19 @@ void statusLoop() {
         delay(200);
 
         Serial.print("1/data/temperatureheateddirt=");
-        Serial.println(hd,0);
+        Serial.println(hd,1);
         delay(200);
 
         Serial.print("1/data/temperaturepotteddirt=");
-        Serial.println(pd,0);
+        Serial.println(pd,1);
         delay(200);
 
         Serial.print("1/data/temperatureboxinterior=");
-        Serial.println(bi,0);
+        Serial.println(bi,1);
         delay(200);
 
         Serial.print("1/data/temperatureboxexterior=");
-        Serial.println(be,0);
+        Serial.println(be,1);
         delay(200);
 
         Serial.print("1/data/lightsensor=");
@@ -139,7 +139,7 @@ void statusLoop() {
         delay(200);
 
         Serial.print("1/data/humidity=");
-        Serial.println(hum,0);
+        Serial.println(hum,1);
         delay(200);
 
         Serial.print("1/data/lidswitch=");
@@ -155,7 +155,7 @@ void statusLoop() {
         delay(200);
 
         Serial.print("1/data/loadcurrent=");
-        Serial.println(lc,0);
+        Serial.println(lc,1);
         delay(200);
 
         Serial.print("1/data/motoraspeed=");
