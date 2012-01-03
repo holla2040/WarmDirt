@@ -17,7 +17,8 @@ AVRDUDE                 = /opt/arduino/hardware/tools/avrdude
                                             
 F_CPU                   = 16000000
 ARDUINO_PORT            = /dev/$(DEVICE_FILE)
-TCP_PORT                = net:192.168.0.10:1055
+#TCP_PORT                = net:192.168.0.10:1055
+TCP_PORT                = net:10.210.211.249:1055
                                             
 ARDUINO_LIBS            = 
                                             
@@ -29,6 +30,7 @@ runold:	reset all raw_upload
 run: all
 	stty -F $(ARDUINO_PORT) $(CONSOLE_BAUDRATE)
 	echo -en "R" > $(ARDUINO_PORT)
+	make reset
 	sleep 0.5
 	make raw_upload
 	make con

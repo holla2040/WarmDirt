@@ -77,18 +77,19 @@ v1.1
     reworked sense resistor, see Figure 34 in ST AN1762
     added resistors to +12 regulator to use variable regulator LM1084 5A part
     connected +5 regulator input to +12V to lower power dissipation in +5 reg
-    changed thermistor resistors to 10K
-    added pin 1 marker to L6207D silk
-    changed snubber cap value to 2200pF
+    * changed thermistor resistors to 10K
+    * added pin 1 marker to L6207D silk
+    * changed snubber cap value to 2200pF
     fixed open hardware on top silk
-    added more isolation around mounting screws
-    changed lightsensor bias resistor to 10K
-    added a LED to lidswitch input
+    * added more isolation around mounting screws
+    * changed lightsensor bias resistor to 10K
+    * added a LED to lidswitch input
     added pulldown resistors to motor A/B enables
     changed the interface circuit between cpu and motor enable
-    added motor A and motor B silk label
+    * added motor A and motor B silk label
     added a resistor at xbee dout for foca flashing without xbee removal
-    disconnected the foca vcc from board connector, foca was powering board
+    * disconnected the foca vcc from board connector, foca was powering board
+    * changed test point names
 
 v1.0
     initial addition

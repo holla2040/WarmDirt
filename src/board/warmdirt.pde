@@ -144,10 +144,11 @@ void statusLoop() {
         Serial.print("1/data/lightlevel=");
         Serial.println(wd.getLightSensor());
         delay(200);
-
+/*
         Serial.print("1/data/humidity=");
         Serial.println(hum,1);
         delay(200);
+*/
 
         Serial.print("1/data/lidswitch=");
         Serial.println(wd.getLidSwitchClosed(),DEC);
