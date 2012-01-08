@@ -90,6 +90,7 @@ v1.1
     added a resistor at xbee dout for foca flashing without xbee removal
     * disconnected the foca vcc from board connector, foca was powering board
     * changed test point names
+    add lipo circuit from here, http://www.sparkfun.com/products/10711
 
 v1.0
     initial addition
