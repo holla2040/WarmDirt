@@ -23,6 +23,9 @@ void setup() {
 
 void commProcess(int c) {
     switch (c) {
+        case 's':
+            nextIdleStatusUpdate = 0;
+            break;
         case 'R':
             reset();
             break;
