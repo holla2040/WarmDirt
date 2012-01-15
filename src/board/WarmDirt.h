@@ -72,6 +72,11 @@ class WarmDirt {
         void        activityToggle();
 
         double      ctof(double c);
+        void        stepperSpeed(int32_t speed);
+        void        stepperStep(int16_t steps);
+        void        stepperEnable();
+        void        stepperDisable();
+
     private:
         uint16_t    adcaverage(uint8_t pin, uint16_t samples);
         double      adctotemp(uint16_t adc,double seriesResistance);

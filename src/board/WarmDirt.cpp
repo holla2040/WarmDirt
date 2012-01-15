@@ -3,11 +3,13 @@
 
 #include "WarmDirt.h"
 #include "DHT.h"
+#include "Stepper.h"
 
 #define DHTPIN  9
 #define DHTTYPE DHT11 
 
 DHT dht(DHTPIN, DHTTYPE);
+Stepper stepper(200,PINMOTORAIN,PINMOTORBIN);
 
 WarmDirt::WarmDirt(double srhd, double srpd, double srbi, double srbe, double sra0, double sra1) {
     _seriesResistorHeatedDirt   = srhd;
@@ -23,6 +25,7 @@ WarmDirt::WarmDirt(double srhd, double srpd, double srbi, double srbe, double sr
     pinMode(PINLOAD0ENABLE, OUTPUT);
     pinMode(PINLOAD1ENABLE, OUTPUT);
 
+/* motor driver can drive 2 servos or 1 stepper */
     pinMode(PINMOTORAIN,        OUTPUT);
     pinMode(PINMOTORAENABLE,    OUTPUT); /* pwm */
     pinMode(PINMOTORBIN,        OUTPUT); 
@@ -219,3 +222,20 @@ void    WarmDirt::setPwmFrequency(uint8_t frequency) {
     TCCR0B = (TCCR0B & 0b11111000) | mode; // Timer 0
 }
 
+void WarmDirt::stepperSpeed(int32_t speed) {
+    stepper.setSpeed(speed);
+}
+
+void WarmDirt::stepperStep(int16_t steps) {
+    stepper.step(steps);
+}
+
+void WarmDirt::stepperEnable() {
+    digitalWrite(PINMOTORAENABLE,HIGH);
+    digitalWrite(PINMOTORBENABLE,HIGH);
+}
+
+void WarmDirt::stepperDisable() {
+    digitalWrite(PINMOTORAENABLE,LOW);
+    digitalWrite(PINMOTORBENABLE,LOW);
+}

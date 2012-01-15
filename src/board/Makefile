@@ -20,7 +20,7 @@ ARDUINO_PORT            = /dev/$(DEVICE_FILE)
 #TCP_PORT                = net:192.168.0.10:1055
 TCP_PORT                = net:10.210.211.249:1055
                                             
-ARDUINO_LIBS            = 
+ARDUINO_LIBS            = Stepper
                                             
 include ./Arduino.mk
 
