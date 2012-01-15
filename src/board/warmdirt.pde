@@ -18,7 +18,7 @@ void reset() {
 
 void setup() {                
     Serial.begin(57600);
-    Serial.println("1/data/begin=1");
+    Serial.println("mqtt/1/data/begin=1");
 }
 
 void commProcess(int c) {
@@ -134,7 +134,6 @@ void statusLoop() {
         wd.activityToggle();
         nextActivityUpdate = now + ACTIVITYUPDATEINVTERVAL;
     }
-    return;
 
     if (now > nextIdleStatusUpdate) {
         hd  = wd.getHeatedDirtTemperature();
@@ -144,56 +143,56 @@ void statusLoop() {
         lc  = wd.getLoadCurrent();
         hum = wd.getDHTHumidity();
 
-        Serial.print("1/data/uptime=");
+        Serial.print("mqtt/1/data/uptime=");
         Serial.println(now,DEC);
         delay(200);
 
-        Serial.print("1/data/temperatureheateddirt=");
+        Serial.print("mqtt/1/data/temperatureheateddirt=");
         Serial.println(hd,1);
         delay(200);
 
-        Serial.print("1/data/temperaturepotteddirt=");
+        Serial.print("mqtt/1/data/temperaturepotteddirt=");
         Serial.println(pd,1);
         delay(200);
 
-        Serial.print("1/data/temperatureboxinterior=");
+        Serial.print("mqtt/1/data/temperatureboxinterior=");
         Serial.println(bi,1);
         delay(200);
 
-        Serial.print("1/data/temperatureboxexterior=");
+        Serial.print("mqtt/1/data/temperatureboxexterior=");
         Serial.println(be,1);
         delay(200);
 
-        Serial.print("1/data/lightlevel=");
+        Serial.print("mqtt/1/data/lightlevel=");
         Serial.println(wd.getLightSensor());
         delay(200);
 /*
-        Serial.print("1/data/humidity=");
+        Serial.print("mqtt/1/data/humidity=");
         Serial.println(hum,1);
         delay(200);
 */
 
-        Serial.print("1/data/lidswitch=");
+        Serial.print("mqtt/1/data/lidswitch=");
         Serial.println(wd.getLidSwitchClosed(),DEC);
         delay(200);
 
-        Serial.print("1/data/load0on=");
+        Serial.print("mqtt/1/data/load0on=");
         Serial.println(wd.getLoad0On(),DEC);
         delay(200);
 
-        Serial.print("1/data/load1on=");
+        Serial.print("mqtt/1/data/load1on=");
         Serial.println(wd.getLoad1On(),DEC);
         delay(200);
 
-        Serial.print("1/data/loadcurrent=");
+        Serial.print("mqtt/1/data/loadcurrent=");
         Serial.println(lc,1);
         delay(200);
 
-        Serial.print("1/data/motoraspeed=");
+        Serial.print("mqtt/1/data/motoraspeed=");
         Serial.println(speedA,DEC);
         delay(200);
 
-        Serial.print("1/data/motorbspeed=");
+        Serial.print("mqtt/1/data/motorbspeed=");
         Serial.println(speedB,DEC);
         delay(200);
 
