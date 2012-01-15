@@ -89,6 +89,7 @@ void commProcess(int c) {
             speedB = 0;
             wd.motorASpeed(speedA);
             wd.motorBSpeed(speedB);
+            wd.stepperDisable();
             break;
         case '0': // avrdude sends 0-space 
             while (!Serial.available()) ;
@@ -96,6 +97,24 @@ void commProcess(int c) {
             if (c == ' ') {
                 reset();
             }
+            break;
+        case 'w':
+            Serial.println("stepper backward");
+            wd.stepperSpeed(100);
+            wd.stepperEnable();
+            delay(10);
+            wd.stepperStep(-237);
+            delay(10);
+            wd.stepperDisable();
+            break;
+        case 'r':
+            Serial.println("stepper forward");
+            wd.stepperSpeed(100);
+            wd.stepperEnable();
+            delay(10);
+            wd.stepperStep(237);
+            delay(10);
+            wd.stepperDisable();
             break;
    }
 }
@@ -115,6 +134,7 @@ void statusLoop() {
         wd.activityToggle();
         nextActivityUpdate = now + ACTIVITYUPDATEINVTERVAL;
     }
+    return;
 
     if (now > nextIdleStatusUpdate) {
         hd  = wd.getHeatedDirtTemperature();

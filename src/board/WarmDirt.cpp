@@ -38,6 +38,7 @@ WarmDirt::WarmDirt(double srhd, double srpd, double srbi, double srbe, double sr
 
     motorASpeed(0);
     motorBSpeed(0);
+    stepperSpeed(100);
 
     setPwmFrequency(F977); /* arduino code sets to F977 for millis and delay to function, change at your own risk */
 
