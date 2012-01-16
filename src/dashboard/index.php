@@ -61,7 +61,7 @@
 <center>
 <table>
 <div id='header'>Warm Dirt Status</div>
-<tr><td class='label'>Timestamp</td><td class='data' id="timestamp"></td><td> </td><td> </td></tr>
+<tr><td class='label'>Last Update</td><td class='data' id="timestamp"></td><td> </td><td> </td></tr>
 <tr>
     <td class='label'>Greenhouse Air</td><td class='data' id="temperatureboxexterior"> </td>
     <td class='label'>Potted Dirt</td> <td class='data' id="temperaturepotteddirt"> </td>
