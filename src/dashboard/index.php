@@ -30,7 +30,7 @@
 <script src="jquery.js"></script>
 <script type="text/javascript">
     function graphload() {
-        var url = "/kv.php?imageonly=1&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureboxexterior&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureboxinterior&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureheateddirt&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperaturepotteddirt&multigraph=1&action=multi";
+        var url = "/kv.php?imageonly=1&width=640&height=480&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureboxexterior&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureboxinterior&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureheateddirt&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperaturepotteddirt&multigraph=1&action=multi";
         var image1 = $('<img />').attr("src",url)
             .load(function(){
                 //$("#graph").attr("src", url); <img src="/images/graph.gif" id="graph" width="800" height="600"/>
@@ -61,11 +61,15 @@
 <center>
 <table>
 <div id='header'>Warm Dirt Status</div>
-<tr><td class='label'>Timestamp</td><td class='data' id="timestamp"></td></tr>
-<tr><td class='label'>Box Exterior</td><td class='data' id="temperatureboxexterior"> </td></tr>
-<tr><td class='label'>Box Interior</td><td class='data' id="temperatureboxinterior"> </td></tr>
-<tr><td class='label'>Potted Dirt</td> <td class='data' id="temperaturepotteddirt"> </td></tr>
-<tr><td class='label'>Heated Dirt</td> <td class='data' id="temperatureheateddirt"> </td></tr>
+<tr><td class='label'>Timestamp</td><td class='data' id="timestamp"></td><td> </td><td> </td></tr>
+<tr>
+    <td class='label'>Box Exterior</td><td class='data' id="temperatureboxexterior"> </td>
+    <td class='label'>Box Interior</td><td class='data' id="temperatureboxinterior"> </td>
+</tr>
+<tr>
+    <td class='label'>Potted Dirt</td> <td class='data' id="temperaturepotteddirt"> </td>
+    <td class='label'>Heated Dirt</td> <td class='data' id="temperatureheateddirt"> </td>
+</tr>
 </table>
 <div id='graphdiv'>
 </div>
