@@ -18,7 +18,7 @@
     padding-top:    0;
     opacity:        0.9;
     font-weight:    bold;
-    width:          50%;
+    padding-right:   10px;
 }
 
 .data { 
@@ -26,7 +26,6 @@
     padding-top:    0;
     opacity:        0.9;
     font-weight:    bold;
-    width:          50%;
 }
 
 #datatable {

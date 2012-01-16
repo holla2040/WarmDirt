@@ -7,7 +7,6 @@
         $query="select timestamp,k,v from kv where k LIKE 'us/co/montrose/1001s2nd/warmdirt/1/data/%'";
         $result = mysql_query($query) or die("query failed");
         $r = "{";
-        $r .= '"'."timestamp".'":"'.date("Y-m-d H:i:s").'",'."\n";
         while($row = mysql_fetch_array($result)) {
             $k = substr($row['k'],40);
             if ((time() - strtotime($row['timestamp'])) < 300) { 
@@ -15,8 +14,9 @@
             } else {
                 $r .= '"'.$k.'":"",'."\n";
             }
+            $ts = $row['timestamp'];
         }
-        $r = substr($r,0,-2); // delete that last comma
+        $r .= '"'."timestamp".'":"'.$ts.'"'."\n";
         $r .="}";
         echo $r;
         return;
@@ -24,6 +24,7 @@
 ?>
 <html>
 <head>
+<title>Warm Dirt Status</title>
 <meta http-equiv="refresh" content="30000">
 <link REL=stylesheet HREF="warmdirt.css" TYPE="text/css">
 <script src="jquery.js"></script>
@@ -39,7 +40,7 @@
 
     function statusload() {
         $.getJSON('index.php?action=status', function(data) {
-            $("#timestamp").html(data.timestamp);
+            $("#timestamp").html(data.timestamp.substr(5,100));
             $("#temperatureheateddirt").html(data.temperatureheateddirt);
             $("#temperaturepotteddirt").html(data.temperaturepotteddirt);
             $("#temperatureboxexterior").html(data.temperatureboxexterior);
