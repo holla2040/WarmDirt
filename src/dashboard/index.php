@@ -63,11 +63,11 @@
 <div id='header'>Warm Dirt Status</div>
 <tr><td class='label'>Timestamp</td><td class='data' id="timestamp"></td><td> </td><td> </td></tr>
 <tr>
-    <td class='label'>Box Exterior</td><td class='data' id="temperatureboxexterior"> </td>
-    <td class='label'>Box Interior</td><td class='data' id="temperatureboxinterior"> </td>
+    <td class='label'>Greenhouse Air</td><td class='data' id="temperatureboxexterior"> </td>
+    <td class='label'>Potted Dirt</td> <td class='data' id="temperaturepotteddirt"> </td>
 </tr>
 <tr>
-    <td class='label'>Potted Dirt</td> <td class='data' id="temperaturepotteddirt"> </td>
+    <td class='label'>Box Air</td><td class='data' id="temperatureboxinterior"> </td>
     <td class='label'>Heated Dirt</td> <td class='data' id="temperatureheateddirt"> </td>
 </tr>
 </table>
