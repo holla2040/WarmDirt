@@ -5,9 +5,10 @@
 #include "NewSoftSerial.h"
 #include "socket.h"
 
-#define UPTIMEUPDATEINVTERVAL 55000
+#define UPTIMEUPDATEINTERVAL   55000
+#define MQTTRECONNECTINTERVAL  300000L
 
-#define LOCATION 0
+#define LOCATION 1
 
 #if LOCATION == 0
 
@@ -21,10 +22,14 @@
 #define MQTTPREFIX  "us/co/montrose/1001s2nd/warmdirt"
 #define MQTTLOC     "us/co/montrose/1001s2nd"
 
+#define STX         2
+#define ETX         3
+
 #endif
 
 uint32_t nextUptimeUpdate;
 uint32_t tcpTimeout;
+uint32_t nextMqttReconnect;
 
 /* 
     print debug log connect usb-ftdi-RX to A0 at 9600 8N1
@@ -96,6 +101,14 @@ void mqttconnect() {
     }
 }
 
+void restartNetwork() {
+    mqtt.disconnect();
+    Ethernet.begin(mac, ip, gateway);
+    delay(2500); // wait a bit for wiz to come up
+    tcpserver.begin();
+    mqttconnect();
+}
+
 void setup() {
     Serial.begin(57600);
     debug.begin(38400);
@@ -106,13 +119,16 @@ void setup() {
     tcpserver.begin();
     lineindex = 0;
     nextUptimeUpdate = 0;
+    nextMqttReconnect = millis() + MQTTRECONNECTINTERVAL;
     mqttconnect();
 }
 
+
 void mqttloop() {
-    if (mqtt.loop() == 0) {
-        mqtt.disconnect();
-        mqttconnect();
+    uint32_t now = millis();
+    if (now > nextMqttReconnect || mqtt.loop() == 0) {
+        restartNetwork();
+        nextMqttReconnect = now + MQTTRECONNECTINTERVAL;
     }
 }
 
@@ -148,15 +164,18 @@ void commloop() {
 
     if (Serial.available()) {
         c = Serial.read();
-        if (c == '\r') {
+        if (c == STX) {
+            lineindex = 0;
             return;
         }
-        if (c == '\n') {
+        if (c == '\r' || c == '\n') {
+            return;
+        }
+        if (c == ETX) {
             line[lineindex] = 0;
             //debug.print("srecieved ");
             //debug.println(line);
             publish(MQTTPREFIX,strtok(line,"="),strtok(NULL,"="));
-            lineindex = 0;
             return;
         }
         line[lineindex++] = c;
@@ -170,7 +189,7 @@ void statusloop() {
     if (now > nextUptimeUpdate) {
         sprintf(v,"%lu",now);
         publish(MQTTLOC,"gateway/uptime",v);
-        nextUptimeUpdate = now + UPTIMEUPDATEINVTERVAL;
+        nextUptimeUpdate = now + UPTIMEUPDATEINTERVAL;
     }
 }
 

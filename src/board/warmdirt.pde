@@ -4,6 +4,9 @@
 #define STATUSUPDATEINVTERVAL   15000
 #define ACTIVITYUPDATEINVTERVAL 500
 
+#define STX         2
+#define ETX         3
+
 uint32_t nextIdleStatusUpdate;
 uint32_t nextActivityUpdate;
 
@@ -18,7 +21,9 @@ void reset() {
 
 void setup() {                
     Serial.begin(57600);
+    Serial.write(STX);
     Serial.println("1/data/begin=1");
+    Serial.write(ETX);
 }
 
 void commProcess(int c) {
@@ -89,6 +94,7 @@ void commProcess(int c) {
             speedB = 0;
             wd.motorASpeed(speedA);
             wd.motorBSpeed(speedB);
+            wd.stepperDisable();
             break;
         case '0': // avrdude sends 0-space 
             while (!Serial.available()) ;
@@ -96,6 +102,24 @@ void commProcess(int c) {
             if (c == ' ') {
                 reset();
             }
+            break;
+        case 'w':
+            Serial.println("stepper backward");
+            wd.stepperSpeed(100);
+            wd.stepperEnable();
+            delay(10);
+            wd.stepperStep(-237);
+            delay(10);
+            wd.stepperDisable();
+            break;
+        case 'r':
+            Serial.println("stepper forward");
+            wd.stepperSpeed(100);
+            wd.stepperEnable();
+            delay(10);
+            wd.stepperStep(237);
+            delay(10);
+            wd.stepperDisable();
             break;
    }
 }
@@ -124,57 +148,83 @@ void statusLoop() {
         lc  = wd.getLoadCurrent();
         hum = wd.getDHTHumidity();
 
+        Serial.write(STX);
         Serial.print("1/data/uptime=");
         Serial.println(now,DEC);
+        Serial.write(ETX);
         delay(200);
 
+        Serial.write(STX);
         Serial.print("1/data/temperatureheateddirt=");
         Serial.println(hd,1);
+        Serial.write(ETX);
         delay(200);
 
+        Serial.write(STX);
         Serial.print("1/data/temperaturepotteddirt=");
         Serial.println(pd,1);
+        Serial.write(ETX);
         delay(200);
 
+        Serial.write(STX);
         Serial.print("1/data/temperatureboxinterior=");
         Serial.println(bi,1);
+        Serial.write(ETX);
         delay(200);
 
+        Serial.write(STX);
         Serial.print("1/data/temperatureboxexterior=");
         Serial.println(be,1);
+        Serial.write(ETX);
         delay(200);
 
+        Serial.write(STX);
         Serial.print("1/data/lightlevel=");
         Serial.println(wd.getLightSensor());
+        Serial.write(ETX);
         delay(200);
 /*
+        Serial.write(STX);
         Serial.print("1/data/humidity=");
         Serial.println(hum,1);
+        Serial.write(ETX);
         delay(200);
 */
 
+        Serial.write(STX);
         Serial.print("1/data/lidswitch=");
         Serial.println(wd.getLidSwitchClosed(),DEC);
+        Serial.write(ETX);
         delay(200);
 
+        Serial.write(STX);
         Serial.print("1/data/load0on=");
         Serial.println(wd.getLoad0On(),DEC);
+        Serial.write(ETX);
         delay(200);
 
+        Serial.write(STX);
         Serial.print("1/data/load1on=");
         Serial.println(wd.getLoad1On(),DEC);
+        Serial.write(ETX);
         delay(200);
 
+        Serial.write(STX);
         Serial.print("1/data/loadcurrent=");
         Serial.println(lc,1);
+        Serial.write(ETX);
         delay(200);
 
+        Serial.write(STX);
         Serial.print("1/data/motoraspeed=");
         Serial.println(speedA,DEC);
+        Serial.write(ETX);
         delay(200);
 
+        Serial.write(STX);
         Serial.print("1/data/motorbspeed=");
         Serial.println(speedB,DEC);
+        Serial.write(ETX);
         delay(200);
 
         nextIdleStatusUpdate = millis() + STATUSUPDATEINVTERVAL;
