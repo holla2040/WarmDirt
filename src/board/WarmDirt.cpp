@@ -1,5 +1,6 @@
 #include "WProgram.h"
 #include <stdint.h>
+#include <util/crc16.h>
 
 #include "WarmDirt.h"
 #include "DHT.h"
@@ -239,4 +240,37 @@ void WarmDirt::stepperEnable() {
 void WarmDirt::stepperDisable() {
     digitalWrite(PINMOTORAENABLE,LOW);
     digitalWrite(PINMOTORBENABLE,LOW);
+}
+
+void WarmDirt::sendString(char *s) {
+    Serial.print(s);
+}
+
+void WarmDirt::sendPacket(char *s) {
+    uint16_t crc = 0xFFFF;
+    char *ptr = s;
+
+    while (*ptr) {
+        crc = crc16_update(crc,*ptr);
+        ptr++;
+    }
+    Serial.print(s);
+    Serial.println(crc,HEX);
+}
+
+/* lifted from http://www.nongnu.org/avr-libc/user-manual/group__util__crc.html */
+/* checked at http://www.zorc.breitbandkatze.de/crc.html */
+uint16_t WarmDirt::crc16_update(uint16_t crc, uint8_t a) {
+    int i;
+
+    crc ^= a;
+    for (i = 0; i < 8; ++i) {
+        if (crc & 1) {
+            crc = (crc >> 1) ^ 0xA001;
+        } else {
+            crc = (crc >> 1);
+        }
+    }
+
+    return crc;
 }

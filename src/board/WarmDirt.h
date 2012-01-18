@@ -77,6 +77,10 @@ class WarmDirt {
         void        stepperEnable();
         void        stepperDisable();
 
+        void        sendString(char *);
+        void        sendPacket(char *);
+        uint16_t    crc16_update(uint16_t crc, uint8_t a);
+
     private:
         uint16_t    adcaverage(uint8_t pin, uint16_t samples);
         double      adctotemp(uint16_t adc,double seriesResistance);

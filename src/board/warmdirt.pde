@@ -21,9 +21,9 @@ void reset() {
 
 void setup() {                
     Serial.begin(57600);
-    Serial.write(STX);
-    Serial.println("1/data/begin=1");
-    Serial.write(ETX);
+    wd.sendPacket("1/data/setup=1");
+
+    while (1) ;
 }
 
 void commProcess(int c) {
