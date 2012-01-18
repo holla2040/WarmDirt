@@ -9,6 +9,9 @@
 #define DHTPIN  9
 #define DHTTYPE DHT11 
 
+#define STX         2
+#define ETX         3
+
 DHT dht(DHTPIN, DHTTYPE);
 Stepper stepper(200,PINMOTORAIN,PINMOTORBIN);
 
@@ -242,35 +245,48 @@ void WarmDirt::stepperDisable() {
     digitalWrite(PINMOTORBENABLE,LOW);
 }
 
-void WarmDirt::sendString(char *s) {
-    Serial.print(s);
+void WarmDirt::sendString(char *str) {
+    Serial.print(str);
 }
 
-void WarmDirt::sendPacket(char *s) {
-    uint16_t crc = 0xFFFF;
-    char *ptr = s;
+/* packet - simple
+   STX LENGTH ADDRESS TYPE str CHECKSUM ETX
+    LENGTH 
+        str length only
+    TYPE
+        b broadcast
+        r reply
+        m message 
+    CHECKSUM
+        sum of all bytes except STX and ETX
+*/
+void WarmDirt::sendPacket(uint8_t address, char type, char *str) {
+    uint8_t checksum = address;
+    char *ptr = str;
 
+    Serial.print(">");
+    Serial.print(str);
+    Serial.println("<");
+    
+    delay(100);
+
+    Serial.print(STX);
+    Serial.print(strlen(str)+2);
+    Serial.print(address);
+    Serial.print(type);
     while (*ptr) {
-        crc = crc16_update(crc,*ptr);
+        Serial.write(*ptr);
+        checksum += *ptr;
         ptr++;
     }
-    Serial.print(s);
-    Serial.println(crc,HEX);
+    Serial.print(checksum);
+    Serial.print(ETX);
+    Serial.println(); // make it readable
 }
 
-/* lifted from http://www.nongnu.org/avr-libc/user-manual/group__util__crc.html */
-/* checked at http://www.zorc.breitbandkatze.de/crc.html */
-uint16_t WarmDirt::crc16_update(uint16_t crc, uint8_t a) {
-    int i;
+void WarmDirt::sendPacketKeyValue(uint8_t address, char type, char *key, char *value) {
+    char buffer[100];
+    sprintf(buffer,"%s=%s",key,value);
+    sendPacket(address,type,buffer);
+} 
 
-    crc ^= a;
-    for (i = 0; i < 8; ++i) {
-        if (crc & 1) {
-            crc = (crc >> 1) ^ 0xA001;
-        } else {
-            crc = (crc >> 1);
-        }
-    }
-
-    return crc;
-}

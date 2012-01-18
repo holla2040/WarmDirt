@@ -4,14 +4,28 @@
 #define STATUSUPDATEINVTERVAL   15000
 #define ACTIVITYUPDATEINVTERVAL 500
 
-#define STX         2
-#define ETX         3
+#define KV  'm'
+
+char *ftoa(char *a, double f, int precision) {
+  long p[] = {0,10,100,1000,10000,100000,1000000,10000000,100000000};
+
+  char *ret = a;
+  long heiltal = (long)f;
+  itoa(heiltal, a, 10);
+  while (*a != '\0') a++;
+  *a++ = '.';
+  long desimal = abs((long)((f - heiltal) * p[precision]));
+  itoa(desimal, a, 10);
+  return ret;
+}
 
 uint32_t nextIdleStatusUpdate;
 uint32_t nextActivityUpdate;
 
 int8_t   speedA = 0;
 int8_t   speedB = 0;
+
+char     address = '1';
 
 WarmDirt wd;
 
@@ -21,9 +35,7 @@ void reset() {
 
 void setup() {                
     Serial.begin(57600);
-    wd.sendPacket("1/data/setup=1");
-
-    while (1) ;
+    wd.sendPacketKeyValue(address,KV,"/data/setup","1");
 }
 
 void commProcess(int c) {
@@ -133,6 +145,7 @@ void commLoop() {
 }
 
 void statusLoop() {
+    char buffer[30];
     uint32_t now = millis();
     double hd,pd,bi,be,lc,hum;
     if (now > nextActivityUpdate) {
@@ -148,84 +161,81 @@ void statusLoop() {
         lc  = wd.getLoadCurrent();
         hum = wd.getDHTHumidity();
 
-        Serial.write(STX);
-        Serial.print("1/data/uptime=");
-        Serial.println(now,DEC);
-        Serial.write(ETX);
+        sprintf(buffer,"%ld",now);
+        wd.sendPacketKeyValue(address,KV,"/data/uptime",buffer);
+        delay(200);
+
+/*
+        ftoa(buffer,hd,1);
+        wd.sendPacketKeyValue(address,KV,"/data/temperatureheateddirt=",buffer);
         delay(200);
 
         Serial.write(STX);
-        Serial.print("1/data/temperatureheateddirt=");
-        Serial.println(hd,1);
-        Serial.write(ETX);
-        delay(200);
-
-        Serial.write(STX);
-        Serial.print("1/data/temperaturepotteddirt=");
+        Serial.print("/data/temperaturepotteddirt=");
         Serial.println(pd,1);
         Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
-        Serial.print("1/data/temperatureboxinterior=");
+        Serial.print("/data/temperatureboxinterior=");
         Serial.println(bi,1);
         Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
-        Serial.print("1/data/temperatureboxexterior=");
+        Serial.print("/data/temperatureboxexterior=");
         Serial.println(be,1);
         Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
-        Serial.print("1/data/lightlevel=");
+        Serial.print("/data/lightlevel=");
         Serial.println(wd.getLightSensor());
         Serial.write(ETX);
         delay(200);
-/*
+
         Serial.write(STX);
-        Serial.print("1/data/humidity=");
+        Serial.print("/data/humidity=");
         Serial.println(hum,1);
         Serial.write(ETX);
         delay(200);
-*/
 
         Serial.write(STX);
-        Serial.print("1/data/lidswitch=");
+        Serial.print("/data/lidswitch=");
         Serial.println(wd.getLidSwitchClosed(),DEC);
         Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
-        Serial.print("1/data/load0on=");
+        Serial.print("/data/load0on=");
         Serial.println(wd.getLoad0On(),DEC);
         Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
-        Serial.print("1/data/load1on=");
+        Serial.print("/data/load1on=");
         Serial.println(wd.getLoad1On(),DEC);
         Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
-        Serial.print("1/data/loadcurrent=");
+        Serial.print("/data/loadcurrent=");
         Serial.println(lc,1);
         Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
-        Serial.print("1/data/motoraspeed=");
+        Serial.print("/data/motoraspeed=");
         Serial.println(speedA,DEC);
         Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
-        Serial.print("1/data/motorbspeed=");
+        Serial.print("/data/motorbspeed=");
         Serial.println(speedB,DEC);
         Serial.write(ETX);
         delay(200);
+*/
 
         nextIdleStatusUpdate = millis() + STATUSUPDATEINVTERVAL;
     }
