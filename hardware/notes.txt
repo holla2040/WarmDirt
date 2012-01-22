@@ -1,0 +1,3 @@
+my stepper motor shaft is 3mm
+uprinting requires a .057" hole for attachments
+
