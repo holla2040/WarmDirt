@@ -25,7 +25,7 @@
 <html>
 <head>
 <title>Warm Dirt Status</title>
-<meta http-equiv="refresh" content="30000">
+<meta http-equiv="refresh" content="300000">
 <link REL=stylesheet HREF="warmdirt.css" TYPE="text/css">
 <script src="jquery.js"></script>
 <script type="text/javascript">
@@ -51,8 +51,8 @@
     $(document).ready(function(){
         statusload();
         graphload();
-        setInterval(statusload,15000);
-        setInterval(statusload,120000);
+        setInterval(statusload,60000);
+        setInterval(graphload,240000);
     });
 </script>
 
