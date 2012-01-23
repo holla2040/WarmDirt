@@ -5,6 +5,17 @@ import os,sys
 import sys
 import termios
 import socket
+import mosquitto, time
+
+def on_connect(rc):
+    if rc == 0:
+        print "mqtt connected successfully."
+    else:
+        print "mqtt onnected unsuccessfully."
+
+mqtt = mosquitto.Mosquitto("warmdirt")
+mqtt.connect("localhost")
+mqtt.on_connect = on_connect
 
 print "console.py"
 
@@ -45,7 +56,11 @@ while True:
         else:
             if u == 3:
                 if (sum&0xff) == 0:
-                    print "/%c%s"%(line[1],line[3:-1])
+                    #print "/%c%s"%(line[1],line[3:-1])
+                    (k,v) = line[3:-1].split("=")
+                    k = "us/co/montrose/1001s2nd/warmdirt/%c%s"%(line[1],k)
+                    mqtt.publish(k,v, qos=0, retain=False)
+                    print "%40s %s"%(k,v)
             else:
                 sum += u
                 line += c
@@ -53,3 +68,5 @@ while True:
 #            print "%-4d %c"%(u,c)
 #        else:
 #            print "%-4d   "%(u)
+    mqtt.loop(0)
+

@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include "WarmDirt.h"
 
-#define STATUSUPDATEINVTERVAL   15000
+#define STATUSUPDATEINVTERVAL   60000
 #define ACTIVITYUPDATEINVTERVAL 500
 
 #define KV  'm'
@@ -182,7 +182,7 @@ void statusLoop() {
         wd.sendPacketKeyValue(address,KV,"/data/temperaturepotteddirt",buffer);
 
         ftoa(buffer,bi,1);
-        wd.sendPacketKeyValue(address,KV,"/data/temperatureboxinterior=",buffer);
+        wd.sendPacketKeyValue(address,KV,"/data/temperatureboxinterior",buffer);
 
         ftoa(buffer,be,1);
         wd.sendPacketKeyValue(address,KV,"/data/temperatureboxexterior",buffer);
