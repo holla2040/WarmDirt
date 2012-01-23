@@ -8,9 +8,12 @@ import socket
 import mosquitto, time
 import traceback
 
+ser = serial.Serial('/dev/ttyUSB0', 57600,timeout=1)
+
 def on_connect(rc):
     if rc == 0:
         print "mqtt connected successfully."
+        ser.write("s")
     else:
         print "mqtt onnected unsuccessfully."
 
@@ -43,7 +46,6 @@ def getchar():
     return(ch)
 
 
-ser = serial.Serial('/dev/ttyUSB0', 57600,timeout=1)
 
 sum = 0
 line = ""
@@ -57,11 +59,12 @@ while True:
         else:
             if u == 3:
                 if (sum&0xff) == 0:
-                    #print "/%c%s"%(line[1],line[3:-1])
+                    print "/%c%s"%(line[1],line[3:-1])
                     try:
                         (k,v) = line[3:-1].split("=")
                         k = "us/co/montrose/1001s2nd/warmdirt/%c%s"%(line[1],k)
                         mqtt.publish(k,v, qos=0, retain=False)
+                        print time.strftime("%m-%d-%Y %H:%M:%S", time.localtime(time.time())),
                         print "%40s %s"%(k,v)
                     except:
                         print line
@@ -69,9 +72,9 @@ while True:
             else:
                 sum += u
                 line += c
-#        if u > 29 and u < 123:
-#            print "%-4d %c"%(u,c)
-#        else:
-#            print "%-4d   "%(u)
+        if u > 29 and u < 123:
+            print "%-4d %c"%(u,c)
+        else:
+            print "%-4d   "%(u)
     mqtt.loop(0)
 
