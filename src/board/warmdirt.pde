@@ -38,6 +38,7 @@ void reset() {
 void setup() {                
     Serial.begin(57600);
     wd.sendPacketKeyValue(address,KV,"/data/setup","1");
+    wd.setTemperatureSetPoint(50,1);
 }
 
 void commProcess(int c) {
@@ -173,92 +174,82 @@ void statusLoop() {
 /*
         sprintf(buffer,"%ld",now);
         wd.sendPacketKeyValue(address,KV,"/data/uptime",buffer);
-        delay(200);
 
         ftoa(buffer,hd,1);
         wd.sendPacketKeyValue(address,KV,"/data/temperatureheateddirt=",buffer);
-        delay(200);
 */
 
         Serial.write(STX);
         Serial.print("/data/uptime=");
         Serial.println(now);
 //        Serial.write(ETX);
-        delay(200);
 
         Serial.write(STX);
         Serial.print("/data/temperatureheateddirt=");
         Serial.println(hd,1);
 //        Serial.write(ETX);
-        delay(200);
 
         Serial.write(STX);
         Serial.print("/data/temperaturepotteddirt=");
         Serial.println(pd,1);
 //        Serial.write(ETX);
-        delay(200);
 
         Serial.write(STX);
         Serial.print("/data/temperatureboxinterior=");
         Serial.println(bi,1);
 //        Serial.write(ETX);
-        delay(200);
 
         Serial.write(STX);
         Serial.print("/data/temperatureboxexterior=");
         Serial.println(be,1);
 //        Serial.write(ETX);
-        delay(200);
 
         Serial.write(STX);
         Serial.print("/data/lightlevel=");
         Serial.println(wd.getLightSensor());
 //        Serial.write(ETX);
-        delay(200);
 
 /*
         Serial.write(STX);
         Serial.print("/data/humidity=");
         Serial.println(hum,1);
         Serial.write(ETX);
-        delay(200);
 */
 
         Serial.write(STX);
         Serial.print("/data/lidswitch=");
         Serial.println(wd.getLidSwitchClosed(),DEC);
 //        Serial.write(ETX);
-        delay(200);
 
         Serial.write(STX);
         Serial.print("/data/load0on=");
         Serial.println(wd.getLoad0On(),DEC);
 //        Serial.write(ETX);
-        delay(200);
 
         Serial.write(STX);
         Serial.print("/data/load1on=");
         Serial.println(wd.getLoad1On(),DEC);
 //        Serial.write(ETX);
-        delay(200);
 
         Serial.write(STX);
         Serial.print("/data/loadcurrent=");
         Serial.println(lc,1);
 //        Serial.write(ETX);
-        delay(200);
 
         Serial.write(STX);
         Serial.print("/data/motoraspeed=");
         Serial.println(speedA,DEC);
 //        Serial.write(ETX);
-        delay(200);
 
         Serial.write(STX);
         Serial.print("/data/motorbspeed=");
         Serial.println(speedB,DEC);
 //        Serial.write(ETX);
-        delay(200);
+
+        Serial.write(STX);
+        Serial.print("/data/temperaturesetpoint=");
+        Serial.println(wd.getTemperatureSetPoint());
+//        Serial.write(ETX);
 
         nextIdleStatusUpdate = millis() + STATUSUPDATEINVTERVAL;
     }
@@ -267,5 +258,6 @@ void statusLoop() {
 void loop() {
     statusLoop();
     commLoop();
+    wd.loop();
 }
 

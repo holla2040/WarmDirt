@@ -1,6 +1,7 @@
 #include "WProgram.h"
 #include <stdint.h>
 #include <util/crc16.h>
+#include <avr/eeprom.h>
 
 #include "WarmDirt.h"
 #include "DHT.h"
@@ -12,16 +13,18 @@
 #define STX         2
 #define ETX         3
 
+enum {EETC,EETSP,EETH};
+
 DHT dht(DHTPIN, DHTTYPE);
 Stepper stepper(15,PINMOTORAIN,PINMOTORBIN);
 
 WarmDirt::WarmDirt(double srhd, double srpd, double srbi, double srbe, double sra0, double sra1) {
-    _seriesResistorHeatedDirt   = srhd;
-    _seriesResistorPottedDirt   = srpd;
-    _seriesResistorBoxInterior  = srbi;
-    _seriesResistorBoxExterior  = srbe;
-    _seriesResistorAux0         = sra0;
-    _seriesResistorAux1         = sra1;
+    seriesResistorHeatedDirt   = srhd;
+    seriesResistorPottedDirt   = srpd;
+    seriesResistorBoxInterior  = srbi;
+    seriesResistorBoxExterior  = srbe;
+    seriesResistorAux0         = sra0;
+    seriesResistorAux1         = sra1;
 
     pinMode(PINLIDSWITCH,   INPUT);
     pinMode(PINACTIVITY,    OUTPUT);
@@ -47,6 +50,9 @@ WarmDirt::WarmDirt(double srhd, double srpd, double srbi, double srbe, double sr
     setPwmFrequency(F977); /* arduino code sets to F977 for millis and delay to function, change at your own risk */
 
     dht.begin();
+
+    //eeprom_write_byte(0, '2');
+    //id = eeprom_read_byte(0);
 }
 
 uint16_t WarmDirt::adcaverage(uint8_t pin, uint16_t samples) {
@@ -82,27 +88,27 @@ double WarmDirt::ctof(double c) {
 }
 
 double  WarmDirt::getHeatedDirtTemperature() {
-    return adctotemp(adcaverage(PINHEATEDDIRT,SAMPLES),_seriesResistorHeatedDirt);
+    return adctotemp(adcaverage(PINHEATEDDIRT,SAMPLES),seriesResistorHeatedDirt);
 }
 
 double  WarmDirt::getPottedDirtTemperature() {
-    return adctotemp(adcaverage(PINPOTTEDDIRT,SAMPLES),_seriesResistorPottedDirt);
+    return adctotemp(adcaverage(PINPOTTEDDIRT,SAMPLES),seriesResistorPottedDirt);
 }
 
 double  WarmDirt::getBoxInteriorTemperature() {
-    return adctotemp(adcaverage(PINBOXINTERIOR,SAMPLES),_seriesResistorBoxInterior);
+    return adctotemp(adcaverage(PINBOXINTERIOR,SAMPLES),seriesResistorBoxInterior);
 }
 
 double  WarmDirt::getBoxExteriorTemperature() {
-    return adctotemp(adcaverage(PINBOXEXTERIOR,SAMPLES),_seriesResistorBoxExterior);
+    return adctotemp(adcaverage(PINBOXEXTERIOR,SAMPLES),seriesResistorBoxExterior);
 }
 
 double  WarmDirt::getAux0Temperature() {
-    return adctotemp(adcaverage(PINAUX0,SAMPLES),_seriesResistorAux0);
+    return adctotemp(adcaverage(PINAUX0,SAMPLES),seriesResistorAux0);
 }
 
 double  WarmDirt::getAux1Temperature() {
-    return adctotemp(adcaverage(PINAUX1,SAMPLES),_seriesResistorAux1);
+    return adctotemp(adcaverage(PINAUX1,SAMPLES),seriesResistorAux1);
 }
 
 /* ref http://www.ladyada.net/learn/sensors/cds.html */
@@ -294,3 +300,35 @@ void WarmDirt::sendPacketKeyValue(uint8_t address, char type, char *key, char *v
     sendPacket(address,type,buffer);
 } 
 
+void WarmDirt::temperatureLoop() {
+    double pd = getPottedDirtTemperature();
+
+    if (temperatureControl) {
+        if (pd < (temperatureSetPoint - temperatureHysteresis)) {
+            load0On();
+        }
+        if (pd > (temperatureSetPoint + temperatureHysteresis)) {
+            load0Off();
+        }
+
+    }
+}
+
+void WarmDirt::loop() {
+    temperatureLoop();
+} 
+
+
+void WarmDirt::setTemperatureControl(boolean value){
+    temperatureControl = value;
+}
+
+void WarmDirt::setTemperatureSetPoint(int8_t value, int8_t hysteresis) {
+    temperatureControl = 1;
+    temperatureSetPoint = value;
+    temperatureHysteresis = hysteresis;
+}
+
+int8_t WarmDirt::getTemperatureSetPoint() {
+    return temperatureSetPoint;
+}

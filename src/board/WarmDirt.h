@@ -80,15 +80,24 @@ class WarmDirt {
         void        sendString(char *str);
         void        sendPacket(uint8_t address, char type, char *str);
         void        sendPacketKeyValue(uint8_t address, char type, char *key, char *value);
+        void        loop();
+        void        temperatureLoop();
+        void        setTemperatureControl(boolean value);
+        void        setTemperatureSetPoint(int8_t value, int8_t hysteresis);
+        int8_t      getTemperatureSetPoint();
+
     private:
         uint16_t    adcaverage(uint8_t pin, uint16_t samples);
         double      adctotemp(uint16_t adc,double seriesResistance);
-        double      _seriesResistorHeatedDirt;
-        double      _seriesResistorPottedDirt;
-        double      _seriesResistorBoxInterior;
-        double      _seriesResistorBoxExterior;
-        double      _seriesResistorAux0;
-        double      _seriesResistorAux1;
+        double      seriesResistorHeatedDirt;
+        double      seriesResistorPottedDirt;
+        double      seriesResistorBoxInterior;
+        double      seriesResistorBoxExterior;
+        double      seriesResistorAux0;
+        double      seriesResistorAux1;
+        boolean     temperatureControl;  // should be persisted in EEPROM
+        int8_t      temperatureSetPoint; // should be persisted
+        int8_t      temperatureHysteresis; // should be persisted
 };
 
 #endif
