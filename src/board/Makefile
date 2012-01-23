@@ -33,7 +33,7 @@ run: all
 	make reset
 	sleep 0.5
 	make raw_upload
-	make con
+	../console/console.py
 
 tcp: all
 	#stty -F $(ARDUINO_PORT) $(CONSOLE_BAUDRATE)

@@ -271,26 +271,23 @@ void WarmDirt::sendString(char *str) {
         sum of all bytes except STX and ETX
 */
 void WarmDirt::sendPacket(uint8_t address, char type, char *str) {
-    uint8_t checksum = address;
+    uint8_t checksum = 0;
     char *ptr = str;
 
-    Serial.print(">");
-    Serial.print(str);
-    Serial.println("<");
-    
-    delay(100);
-
-    Serial.print(STX);
-    Serial.print(strlen(str)+2);
-    Serial.print(address);
-    Serial.print(type);
+    Serial.write(STX);
+    Serial.write(strlen(str)+2);
+    checksum += strlen(str)+2;
+    Serial.write(address);
+    checksum += address;
+    Serial.write(type);
+    checksum += type;
     while (*ptr) {
         Serial.write(*ptr);
         checksum += *ptr;
         ptr++;
     }
-    Serial.print(checksum);
-    Serial.print(ETX);
+    Serial.write(256 - checksum);
+    Serial.write(ETX);
     Serial.println(); // make it readable
 }
 

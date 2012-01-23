@@ -5,8 +5,6 @@
 #define ACTIVITYUPDATEINVTERVAL 500
 
 #define KV  'm'
-#define STX         2
-#define ETX         3
 
 char *ftoa(char *a, double f, int precision) {
   long p[] = {0,10,100,1000,10000,100000,1000000,10000000,100000000};
@@ -169,87 +167,56 @@ void statusLoop() {
         bi  = wd.getBoxInteriorTemperature();
         be  = wd.getBoxExteriorTemperature();
         lc  = wd.getLoadCurrent();
-        hum = wd.getDHTHumidity();
+//        hum = wd.getDHTHumidity();
 
-/*
         sprintf(buffer,"%ld",now);
         wd.sendPacketKeyValue(address,KV,"/data/uptime",buffer);
 
+        sprintf(buffer,"%d",wd.getTemperatureSetPoint());
+        wd.sendPacketKeyValue(address,KV,"/data/temperaturesetpoint",buffer);
+
         ftoa(buffer,hd,1);
-        wd.sendPacketKeyValue(address,KV,"/data/temperatureheateddirt=",buffer);
-*/
+        wd.sendPacketKeyValue(address,KV,"/data/temperatureheateddirt",buffer);
 
-        Serial.write(STX);
-        Serial.print("/data/uptime=");
-        Serial.println(now);
-//        Serial.write(ETX);
+        ftoa(buffer,pd,1);
+        wd.sendPacketKeyValue(address,KV,"/data/temperaturepotteddirt",buffer);
 
-        Serial.write(STX);
-        Serial.print("/data/temperaturesetpoint=");
-        Serial.println(wd.getTemperatureSetPoint());
-//        Serial.write(ETX);
+        ftoa(buffer,bi,1);
+        wd.sendPacketKeyValue(address,KV,"/data/temperatureboxinterior=",buffer);
 
-        Serial.write(STX);
-        Serial.print("/data/temperatureheateddirt=");
-        Serial.println(hd,1);
-//        Serial.write(ETX);
+        ftoa(buffer,be,1);
+        wd.sendPacketKeyValue(address,KV,"/data/temperatureboxexterior",buffer);
 
-        Serial.write(STX);
-        Serial.print("/data/temperaturepotteddirt=");
-        Serial.println(pd,1);
-//        Serial.write(ETX);
+        sprintf(buffer,"%d",wd.getLightSensor());
+        wd.sendPacketKeyValue(address,KV,"/data/lightlevel",buffer);
 
-        Serial.write(STX);
-        Serial.print("/data/temperatureboxinterior=");
-        Serial.println(bi,1);
-//        Serial.write(ETX);
 
-        Serial.write(STX);
-        Serial.print("/data/temperatureboxexterior=");
-        Serial.println(be,1);
-//        Serial.write(ETX);
 
-        Serial.write(STX);
-        Serial.print("/data/lightlevel=");
-        Serial.println(wd.getLightSensor());
-//        Serial.write(ETX);
+
+        sprintf(buffer,"%d",wd.getLidSwitchClosed());
+        wd.sendPacketKeyValue(address,KV, "/data/lidswitch",buffer);
+
+        sprintf(buffer,"%d",wd.getLoad0On());
+        wd.sendPacketKeyValue(address,KV,"/data/load0on",buffer);
+
+        sprintf(buffer,"%d",wd.getLoad1On());
+        wd.sendPacketKeyValue(address,KV,"/data/load1on",buffer);
+
+        sprintf(buffer,"%d",lc);
+        wd.sendPacketKeyValue(address,KV,"/data/loadcurrent",buffer);
+
+
 
 /*
-        Serial.write(STX);
-        Serial.print("/data/humidity=");
-        Serial.println(hum,1);
-        Serial.write(ETX);
+        ftoa(buffer,hum,1);
+        wd.sendPacketKeyValue(address,KV,"/data/humidity",buffer);
+
+        sprintf(buffer,"%d",speedA);
+        wd.sendPacketKeyValue(address,KV,"/data/motoraspeed",buffer);
+
+        sprintf(buffer,"%d",speedB);
+        wd.sendPacketKeyValue(address,KV,"/data/motorbspeed",buffer);
 */
-
-        Serial.write(STX);
-        Serial.print("/data/lidswitch=");
-        Serial.println(wd.getLidSwitchClosed(),DEC);
-//        Serial.write(ETX);
-
-        Serial.write(STX);
-        Serial.print("/data/load0on=");
-        Serial.println(wd.getLoad0On(),DEC);
-//        Serial.write(ETX);
-
-        Serial.write(STX);
-        Serial.print("/data/load1on=");
-        Serial.println(wd.getLoad1On(),DEC);
-//        Serial.write(ETX);
-
-        Serial.write(STX);
-        Serial.print("/data/loadcurrent=");
-        Serial.println(lc,1);
-//        Serial.write(ETX);
-
-        Serial.write(STX);
-        Serial.print("/data/motoraspeed=");
-        Serial.println(speedA,DEC);
-//        Serial.write(ETX);
-
-        Serial.write(STX);
-        Serial.print("/data/motorbspeed=");
-        Serial.println(speedB,DEC);
-//        Serial.write(ETX);
 
 
         nextIdleStatusUpdate = millis() + STATUSUPDATEINVTERVAL;
