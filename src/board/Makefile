@@ -31,7 +31,7 @@ run: all
 	stty -F $(ARDUINO_PORT) $(CONSOLE_BAUDRATE)
 	make reset
 	echo -en "R" > $(ARDUINO_PORT)
-	#sleep 0.5
+	sleep 0.5
 	make raw_upload
 	../console/console.py
 
