@@ -185,6 +185,11 @@ void statusLoop() {
 //        Serial.write(ETX);
 
         Serial.write(STX);
+        Serial.print("/data/temperaturesetpoint=");
+        Serial.println(wd.getTemperatureSetPoint());
+//        Serial.write(ETX);
+
+        Serial.write(STX);
         Serial.print("/data/temperatureheateddirt=");
         Serial.println(hd,1);
 //        Serial.write(ETX);
@@ -246,10 +251,6 @@ void statusLoop() {
         Serial.println(speedB,DEC);
 //        Serial.write(ETX);
 
-        Serial.write(STX);
-        Serial.print("/data/temperaturesetpoint=");
-        Serial.println(wd.getTemperatureSetPoint());
-//        Serial.write(ETX);
 
         nextIdleStatusUpdate = millis() + STATUSUPDATEINVTERVAL;
     }
