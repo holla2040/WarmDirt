@@ -174,36 +174,46 @@ void statusLoop() {
 
         sprintf(buffer,"%d",wd.getTemperatureSetPoint());
         wd.sendPacketKeyValue(address,KV,"/data/temperaturesetpoint",buffer);
+        delay(100);
 
         ftoa(buffer,hd,1);
         wd.sendPacketKeyValue(address,KV,"/data/temperatureheateddirt",buffer);
+        delay(100);
 
         ftoa(buffer,pd,1);
         wd.sendPacketKeyValue(address,KV,"/data/temperaturepotteddirt",buffer);
+        delay(100);
 
         ftoa(buffer,bi,1);
         wd.sendPacketKeyValue(address,KV,"/data/temperatureboxinterior",buffer);
+        delay(100);
 
         ftoa(buffer,be,1);
         wd.sendPacketKeyValue(address,KV,"/data/temperatureboxexterior",buffer);
+        delay(100);
 
         sprintf(buffer,"%d",wd.getLightSensor());
         wd.sendPacketKeyValue(address,KV,"/data/lightlevel",buffer);
+        delay(100);
 
 
 
 
         sprintf(buffer,"%d",wd.getLidSwitchClosed());
         wd.sendPacketKeyValue(address,KV, "/data/lidswitch",buffer);
+        delay(100);
 
         sprintf(buffer,"%d",wd.getLoad0On());
         wd.sendPacketKeyValue(address,KV,"/data/load0on",buffer);
+        delay(100);
 
         sprintf(buffer,"%d",wd.getLoad1On());
         wd.sendPacketKeyValue(address,KV,"/data/load1on",buffer);
+        delay(100);
 
         ftoa(buffer,lc,1);
         wd.sendPacketKeyValue(address,KV,"/data/loadcurrent",buffer);
+        delay(100);
 
 
 

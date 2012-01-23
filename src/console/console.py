@@ -6,6 +6,7 @@ import sys
 import termios
 import socket
 import mosquitto, time
+import traceback
 
 def on_connect(rc):
     if rc == 0:
@@ -57,10 +58,14 @@ while True:
             if u == 3:
                 if (sum&0xff) == 0:
                     #print "/%c%s"%(line[1],line[3:-1])
-                    (k,v) = line[3:-1].split("=")
-                    k = "us/co/montrose/1001s2nd/warmdirt/%c%s"%(line[1],k)
-                    mqtt.publish(k,v, qos=0, retain=False)
-                    print "%40s %s"%(k,v)
+                    try:
+                        (k,v) = line[3:-1].split("=")
+                        k = "us/co/montrose/1001s2nd/warmdirt/%c%s"%(line[1],k)
+                        mqtt.publish(k,v, qos=0, retain=False)
+                        print "%40s %s"%(k,v)
+                    except:
+                        print line
+                        traceback.print_exc(file=sys.stdout)
             else:
                 sum += u
                 line += c
