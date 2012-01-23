@@ -202,7 +202,7 @@ void statusLoop() {
         sprintf(buffer,"%d",wd.getLoad1On());
         wd.sendPacketKeyValue(address,KV,"/data/load1on",buffer);
 
-        sprintf(buffer,"%d",lc);
+        ftoa(buffer,lc,1);
         wd.sendPacketKeyValue(address,KV,"/data/loadcurrent",buffer);
 
 
