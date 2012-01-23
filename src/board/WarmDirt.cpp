@@ -13,7 +13,7 @@
 #define ETX         3
 
 DHT dht(DHTPIN, DHTTYPE);
-Stepper stepper(200,PINMOTORAIN,PINMOTORBIN);
+Stepper stepper(15,PINMOTORAIN,PINMOTORBIN);
 
 WarmDirt::WarmDirt(double srhd, double srpd, double srbi, double srbe, double sra0, double sra1) {
     _seriesResistorHeatedDirt   = srhd;
@@ -236,13 +236,17 @@ void WarmDirt::stepperStep(int16_t steps) {
 }
 
 void WarmDirt::stepperEnable() {
-    digitalWrite(PINMOTORAENABLE,HIGH);
-    digitalWrite(PINMOTORBENABLE,HIGH);
+    analogWrite(PINMOTORAENABLE,200);
+    analogWrite(PINMOTORBENABLE,200);
+    //digitalWrite(PINMOTORAENABLE,HIGH);
+    //digitalWrite(PINMOTORBENABLE,HIGH);
 }
 
 void WarmDirt::stepperDisable() {
-    digitalWrite(PINMOTORAENABLE,LOW);
-    digitalWrite(PINMOTORBENABLE,LOW);
+    analogWrite(PINMOTORAENABLE,0);
+    analogWrite(PINMOTORBENABLE,0);
+    //digitalWrite(PINMOTORAENABLE,LOW);
+    //digitalWrite(PINMOTORBENABLE,LOW);
 }
 
 void WarmDirt::sendString(char *str) {

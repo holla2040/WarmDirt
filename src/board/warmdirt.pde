@@ -5,6 +5,8 @@
 #define ACTIVITYUPDATEINVTERVAL 500
 
 #define KV  'm'
+#define STX         2
+#define ETX         3
 
 char *ftoa(char *a, double f, int precision) {
   long p[] = {0,10,100,1000,10000,100000,1000000,10000000,100000000};
@@ -116,20 +118,27 @@ void commProcess(int c) {
             }
             break;
         case 'w':
+            int i;
             Serial.println("stepper backward");
-            wd.stepperSpeed(100);
+            wd.stepperSpeed(10);
             wd.stepperEnable();
             delay(10);
-            wd.stepperStep(-237);
+            wd.stepperStep(100);
+            /*
+            for (i = 0; i < 10; i++) { 
+                wd.stepperStep(1);
+                delay(10);
+            }
+            */
             delay(10);
             wd.stepperDisable();
             break;
         case 'r':
             Serial.println("stepper forward");
-            wd.stepperSpeed(100);
+            wd.stepperSpeed(10);
             wd.stepperEnable();
             delay(10);
-            wd.stepperStep(237);
+            wd.stepperStep(100);
             delay(10);
             wd.stepperDisable();
             break;
@@ -161,81 +170,95 @@ void statusLoop() {
         lc  = wd.getLoadCurrent();
         hum = wd.getDHTHumidity();
 
+/*
         sprintf(buffer,"%ld",now);
         wd.sendPacketKeyValue(address,KV,"/data/uptime",buffer);
         delay(200);
 
-/*
         ftoa(buffer,hd,1);
         wd.sendPacketKeyValue(address,KV,"/data/temperatureheateddirt=",buffer);
+        delay(200);
+*/
+
+        Serial.write(STX);
+        Serial.print("/data/uptime=");
+        Serial.println(now);
+//        Serial.write(ETX);
+        delay(200);
+
+        Serial.write(STX);
+        Serial.print("/data/temperatureheateddirt=");
+        Serial.println(hd,1);
+//        Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
         Serial.print("/data/temperaturepotteddirt=");
         Serial.println(pd,1);
-        Serial.write(ETX);
+//        Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
         Serial.print("/data/temperatureboxinterior=");
         Serial.println(bi,1);
-        Serial.write(ETX);
+//        Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
         Serial.print("/data/temperatureboxexterior=");
         Serial.println(be,1);
-        Serial.write(ETX);
+//        Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
         Serial.print("/data/lightlevel=");
         Serial.println(wd.getLightSensor());
-        Serial.write(ETX);
+//        Serial.write(ETX);
         delay(200);
 
+/*
         Serial.write(STX);
         Serial.print("/data/humidity=");
         Serial.println(hum,1);
         Serial.write(ETX);
         delay(200);
+*/
 
         Serial.write(STX);
         Serial.print("/data/lidswitch=");
         Serial.println(wd.getLidSwitchClosed(),DEC);
-        Serial.write(ETX);
+//        Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
         Serial.print("/data/load0on=");
         Serial.println(wd.getLoad0On(),DEC);
-        Serial.write(ETX);
+//        Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
         Serial.print("/data/load1on=");
         Serial.println(wd.getLoad1On(),DEC);
-        Serial.write(ETX);
+//        Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
         Serial.print("/data/loadcurrent=");
         Serial.println(lc,1);
-        Serial.write(ETX);
+//        Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
         Serial.print("/data/motoraspeed=");
         Serial.println(speedA,DEC);
-        Serial.write(ETX);
+//        Serial.write(ETX);
         delay(200);
 
         Serial.write(STX);
         Serial.print("/data/motorbspeed=");
         Serial.println(speedB,DEC);
-        Serial.write(ETX);
+//        Serial.write(ETX);
         delay(200);
-*/
 
         nextIdleStatusUpdate = millis() + STATUSUPDATEINVTERVAL;
     }
