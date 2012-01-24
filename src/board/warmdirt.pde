@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include "WarmDirt.h"
 
-#define STATUSUPDATEINVTERVAL   30000
+#define STATUSUPDATEINVTERVAL   60000
 #define ACTIVITYUPDATEINVTERVAL 500
 
 
@@ -35,7 +35,7 @@ void reset() {
 void setup() {                
     Serial.begin(57600);
     wd.sendPacketKeyValue(address,KV,"/data/setup","1");
-    wd.setTemperatureSetPoint(60,1);
+    wd.setTemperatureSetPoint(54.5,1);
 }
 
 void commProcess(int c) {
@@ -212,6 +212,10 @@ void statusLoop() {
 
         ftoa(buffer,lc,1);
         wd.sendPacketKeyValue(address,KV,"/data/loadcurrent",buffer);
+        delay(100);
+
+        ftoa(buffer,wd.getPIDOutput(),1);
+        wd.sendPacketKeyValue(address,KV,"/data/pidoutput",buffer);
         delay(100);
 
 

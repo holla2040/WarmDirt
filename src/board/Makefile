@@ -33,6 +33,7 @@ run: all
 	echo -en "R" > $(ARDUINO_PORT)
 	sleep 0.5
 	make raw_upload
+	#make con
 	../console/console.py
 
 tcp: all

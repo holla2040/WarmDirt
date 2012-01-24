@@ -90,6 +90,8 @@ class WarmDirt {
         void        setTemperatureControl(boolean value);
         void        setTemperatureSetPoint(int8_t value, int8_t hysteresis);
         int8_t      getTemperatureSetPoint();
+        double      getPIDOutput();
+        void        debug();
 
     private:
         uint16_t    adcaverage(uint8_t pin, uint16_t samples);

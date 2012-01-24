@@ -65,7 +65,7 @@ while True:
                         k = "us/co/montrose/1001s2nd/warmdirt/%c%s"%(line[1],k)
                         mqtt.publish(k,v, qos=0, retain=False)
                         print time.strftime("%m-%d-%Y %H:%M:%S", time.localtime(time.time())),
-                        print "%40s %s"%(k,v)
+                        print "%-30s %s"%(k[33:],v)
                     except:
                         print line
                         traceback.print_exc(file=sys.stdout)

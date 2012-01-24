@@ -56,13 +56,16 @@ WarmDirt::WarmDirt(double srhd, double srpd, double srbi, double srbe, double sr
 
     dht.begin();
 
-
     windowStartTime = millis();
-    pid.SetOutputLimits(0, windowSize);
-    pid.SetMode(AUTOMATIC);
 
     //eeprom_write_byte(0, '2');
     //id = eeprom_read_byte(0);
+}
+
+void WarmDirt::debug() {
+    Serial.print("pid mode ");
+    Serial.println(pid.GetMode());
+
 }
 
 uint16_t WarmDirt::adcaverage(uint8_t pin, uint16_t samples) {
@@ -91,6 +94,9 @@ uint16_t WarmDirt::adcmax(uint8_t pin, uint16_t samples) {
     return max;
 }
 
+double  WarmDirt::getPIDOutput() {
+    return pidoutput;
+}
 
 double  WarmDirt::adctotemp(uint16_t adc, double seriesResistance) {
     double steinhart;
@@ -164,16 +170,20 @@ double  WarmDirt::getLoadACCurrent() {
 }
 
 void    WarmDirt::load0Off() {
+/*
     if (digitalRead(PINLOAD0ENABLE) == LOW) {
         sendPacketKeyValue('1',KV,"/data/load0on","0");
     }
+*/
     digitalWrite(PINLOAD0ENABLE,HIGH);
 }
 
 void    WarmDirt::load0On() {
+/*
     if (digitalRead(PINLOAD0ENABLE) == HIGH) {
         sendPacketKeyValue('1',KV,"/data/load0on","1");
     }
+*/
     digitalWrite(PINLOAD0ENABLE,LOW);
 }
 
@@ -335,8 +345,14 @@ void WarmDirt::sendPacketKeyValue(uint8_t address, char type, char *key, char *v
 
 void WarmDirt::temperatureLoop() {
     if (temperatureControl) {
+        //Serial.print("temperatureLoop ");
         pidinput = getHeatedDirtTemperature();
         pid.Compute();
+        //Serial.print(pidinput);
+        //Serial.print(" ");
+        //Serial.print(pidoutput);
+        //Serial.print(" ");
+        //Serial.println(pidsetpoint);
 
         if(millis() - windowStartTime>windowSize) { //time to shift the Relay Window
             windowStartTime += windowSize;
@@ -375,7 +391,10 @@ void WarmDirt::setTemperatureSetPoint(int8_t value, int8_t hysteresis) {
     temperatureControl = 1;
     temperatureSetPoint = value;
     temperatureHysteresis = hysteresis;
+
     pidsetpoint = value;
+    pid.SetOutputLimits(0, windowSize);
+    pid.SetMode(AUTOMATIC);
 }
 
 int8_t WarmDirt::getTemperatureSetPoint() {
