@@ -318,13 +318,13 @@ void WarmDirt::sendPacketKeyValue(uint8_t address, char type, char *key, char *v
 } 
 
 void WarmDirt::temperatureLoop() {
-    double pd = getPottedDirtTemperature();
+    double pv = getHeatedDirtTemperature();
 
     if (temperatureControl) {
-        if (pd < (temperatureSetPoint - temperatureHysteresis)) {
+        if (pv < (temperatureSetPoint - temperatureHysteresis)) {
             load0On();
         }
-        if (pd > (temperatureSetPoint + temperatureHysteresis)) {
+        if (pv > (temperatureSetPoint + temperatureHysteresis)) {
             load0Off();
         }
 

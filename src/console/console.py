@@ -59,7 +59,7 @@ while True:
         else:
             if u == 3:
                 if (sum&0xff) == 0:
-                    print "/%c%s"%(line[1],line[3:-1])
+                    #print "/%c%s"%(line[1],line[3:-1])
                     try:
                         (k,v) = line[3:-1].split("=")
                         k = "us/co/montrose/1001s2nd/warmdirt/%c%s"%(line[1],k)
@@ -72,9 +72,10 @@ while True:
             else:
                 sum += u
                 line += c
-        if u > 29 and u < 123:
-            print "%-4d %c"%(u,c)
-        else:
-            print "%-4d   "%(u)
+
+#        if u > 29 and u < 123:
+#            print "%-4d %c"%(u,c)
+#        else:
+#            print "%-4d   "%(u)
     mqtt.loop(0)
 
