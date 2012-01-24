@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include "WarmDirt.h"
 
-#define STATUSUPDATEINVTERVAL   60000
+#define STATUSUPDATEINVTERVAL   30000
 #define ACTIVITYUPDATEINVTERVAL 500
 
 

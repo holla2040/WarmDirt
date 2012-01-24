@@ -18,7 +18,7 @@ DHT dht(DHTPIN, DHTTYPE);
 Stepper stepper(15,PINMOTORAIN,PINMOTORBIN);
 
 double pidsetpoint, pidinput, pidoutput; 
-PID pid(&pidinput, &pidoutput, &pidsetpoint,2,5,1, DIRECT);
+PID pid(&pidinput, &pidoutput, &pidsetpoint,5,0.1,1, DIRECT);
 
 int windowSize = 5000;
 unsigned long windowStartTime;
