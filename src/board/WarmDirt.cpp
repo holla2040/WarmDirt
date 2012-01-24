@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <util/crc16.h>
 #include <avr/eeprom.h>
+#include "PID_v1.h"
 
 #include "WarmDirt.h"
 #include "DHT.h"
@@ -17,6 +18,12 @@ enum {EETC,EETSP,EETH};
 
 DHT dht(DHTPIN, DHTTYPE);
 Stepper stepper(15,PINMOTORAIN,PINMOTORBIN);
+
+double pidsetpoint, pidinput, pidoutput; 
+PID pid(&pidinput, &pidoutput, &pidsetpoint,2,5,1, DIRECT);
+
+int windowSize = 5000;
+unsigned long windowStartTime;
 
 WarmDirt::WarmDirt(double srhd, double srpd, double srbi, double srbe, double sra0, double sra1) {
     seriesResistorHeatedDirt   = srhd;
@@ -50,6 +57,11 @@ WarmDirt::WarmDirt(double srhd, double srpd, double srbi, double srbe, double sr
     setPwmFrequency(F977); /* arduino code sets to F977 for millis and delay to function, change at your own risk */
 
     dht.begin();
+
+
+    windowStartTime = millis();
+    pid.SetOutputLimits(0, windowSize);
+    pid.SetMode(AUTOMATIC);
 
     //eeprom_write_byte(0, '2');
     //id = eeprom_read_byte(0);
@@ -318,8 +330,23 @@ void WarmDirt::sendPacketKeyValue(uint8_t address, char type, char *key, char *v
 } 
 
 void WarmDirt::temperatureLoop() {
-    double pv = getHeatedDirtTemperature();
+    if (temperatureControl) {
+        pidinput = getHeatedDirtTemperature();
+        pid.Compute();
 
+        if(millis() - windowStartTime>windowSize) { //time to shift the Relay Window
+            windowStartTime += windowSize;
+        }
+
+        if(pidoutput < millis() - windowStartTime) {
+            load0Off();
+        } else {
+            load0On();
+        }
+    }
+
+/* bang control 
+    double pv = getHeatedDirtTemperature();
     if (temperatureControl) {
         if (pv < (temperatureSetPoint - temperatureHysteresis)) {
             load0On();
@@ -327,8 +354,8 @@ void WarmDirt::temperatureLoop() {
         if (pv > (temperatureSetPoint + temperatureHysteresis)) {
             load0Off();
         }
-
     }
+*/
 }
 
 void WarmDirt::loop() {
@@ -344,6 +371,7 @@ void WarmDirt::setTemperatureSetPoint(int8_t value, int8_t hysteresis) {
     temperatureControl = 1;
     temperatureSetPoint = value;
     temperatureHysteresis = hysteresis;
+    pidsetpoint = value;
 }
 
 int8_t WarmDirt::getTemperatureSetPoint() {
