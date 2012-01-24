@@ -91,6 +91,7 @@ v1.1
     * disconnected the foca vcc from board connector, foca was powering board
     * changed test point names
     add lipo circuit from here, http://www.sparkfun.com/products/10711
+    added rectifier for AC current measurements per Application 4 - Rectified Output
 
 v1.0
     initial addition
