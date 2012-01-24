@@ -11,8 +11,6 @@
 #define DHTPIN  9
 #define DHTTYPE DHT11 
 
-#define STX         2
-#define ETX         3
 
 enum {EETC,EETSP,EETH};
 
@@ -166,10 +164,16 @@ double  WarmDirt::getLoadACCurrent() {
 }
 
 void    WarmDirt::load0Off() {
+    if (digitalRead(PINLOAD0ENABLE) == LOW) {
+        sendPacketKeyValue('1',KV,"/data/load0on","0");
+    }
     digitalWrite(PINLOAD0ENABLE,HIGH);
 }
 
 void    WarmDirt::load0On() {
+    if (digitalRead(PINLOAD0ENABLE) == HIGH) {
+        sendPacketKeyValue('1',KV,"/data/load0on","1");
+    }
     digitalWrite(PINLOAD0ENABLE,LOW);
 }
 

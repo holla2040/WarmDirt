@@ -32,6 +32,10 @@
 
 #define MOTORSPEEDINC       5
 
+#define STX         2
+#define ETX         3
+#define KV  'm'
+
 enum{F62500,F7813,F977,F244,F61};
 /** Frequencies available
     timer 0 - pins 5,6 - 62500Hz

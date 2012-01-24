@@ -4,9 +4,6 @@
 #define STATUSUPDATEINVTERVAL   30000
 #define ACTIVITYUPDATEINVTERVAL 500
 
-#define KV  'm'
-
-
 
 char *ftoa(char *a, double f, int precision) {
   long p[] = {0,10,100,1000,10000,100000,1000000,10000000,100000000};
