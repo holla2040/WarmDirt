@@ -45,6 +45,11 @@
             $("#temperaturepotteddirt").html(data.temperaturepotteddirt);
             $("#temperatureboxexterior").html(data.temperatureboxexterior);
             $("#temperatureboxinterior").html(data.temperatureboxinterior);
+            if (data.load0on == '1') {
+                $("#load0on").html("On");
+            } else {
+                $("#load0on").html("Off");
+            }
         });
     }
 
@@ -69,6 +74,10 @@
 <tr>
     <td class='label'>Box Air</td><td class='data' id="temperatureboxinterior"> </td>
     <td class='label'>Heated Dirt</td> <td class='data' id="temperatureheateddirt"> </td>
+</tr>
+<tr>
+    <td class='label'>Heater</td><td class='data' id="load0on"> </td>
+    <td class='label'> </td> <td class='data' id="unused"> </td>
 </tr>
 </table>
 <div id='graphdiv'>
