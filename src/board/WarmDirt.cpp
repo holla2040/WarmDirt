@@ -66,6 +66,22 @@ uint16_t WarmDirt::adcaverage(uint8_t pin, uint16_t samples) {
     return sum / samples;
 }
 
+/* http://arduino.cc/en/Reference/AnalogRead 
+    It takes about 100 microseconds (0.0001 s) to read an analog input, so the maximum reading rate is about 10,000 times a second.
+    samples = 166 reads an entire AC 60Hz wave
+*/
+uint16_t WarmDirt::adcmax(uint8_t pin, uint16_t samples) {
+    uint16_t i,max,normalizedvalue;
+    for (i = 0; i < samples; i++) {
+        normalizedvalue = abs(analogRead(pin) - 511);
+        if (normalizedvalue > max) {
+            max = normalizedvalue;
+        }
+    }
+    return max;
+}
+
+
 double  WarmDirt::adctotemp(uint16_t adc, double seriesResistance) {
     double steinhart;
     double thermalr;
@@ -129,8 +145,12 @@ double  WarmDirt::getDHTHumidity() {
     return dht.readHumidity();
 }
 
-double  WarmDirt::getLoadCurrent() {
+double  WarmDirt::getLoadDCCurrent() {
     return adcaverage(PINLOADCURRENT,SAMPLES);
+}
+
+double  WarmDirt::getLoadACCurrent() {
+    return adcmax(PINLOADCURRENT,200);
 }
 
 void    WarmDirt::load0Off() {

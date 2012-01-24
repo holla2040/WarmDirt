@@ -166,7 +166,7 @@ void statusLoop() {
         pd  = wd.getPottedDirtTemperature();
         bi  = wd.getBoxInteriorTemperature();
         be  = wd.getBoxExteriorTemperature();
-        lc  = wd.getLoadCurrent();
+        lc  = wd.getLoadACCurrent();
 //        hum = wd.getDHTHumidity();
 
         sprintf(buffer,"%ld",now);
