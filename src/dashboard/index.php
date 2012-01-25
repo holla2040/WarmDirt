@@ -50,6 +50,7 @@
             } else {
                 $("#load0on").html("Off");
             }
+            $("#extra").html(data.pidoutput);
         });
     }
 
@@ -64,9 +65,9 @@
 </head>
 <body>
 <center>
-<table>
+<table id='datatable'>
 <div id='header'>Warm Dirt Status</div>
-<tr><td class='label'>Last Update</td><td class='data' id="timestamp"></td><td> </td><td> </td></tr>
+<tr><td class='label'>Last Update</td><td class='data' id="timestamp"></td></tr>
 <tr>
     <td class='label'>Greenhouse Air</td><td class='data' id="temperatureboxexterior"> </td>
     <td class='label'>Potted Dirt</td> <td class='data' id="temperaturepotteddirt"> </td>
@@ -77,7 +78,7 @@
 </tr>
 <tr>
     <td class='label'>Heater</td><td class='data' id="load0on"> </td>
-    <td class='label'> </td> <td class='data' id="unused"> </td>
+    <td class='label'>PID Out </td> <td class='data' id="extra"> </td>
 </tr>
 </table>
 <div id='graphdiv'>
