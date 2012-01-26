@@ -17,10 +17,6 @@ def on_connect(rc):
     else:
         print "mqtt onnected unsuccessfully."
 
-mqtt = mosquitto.Mosquitto("warmdirt")
-mqtt.connect("localhost")
-mqtt.on_connect = on_connect
-
 print "console.py"
 
 def getchar():
@@ -47,35 +43,45 @@ def getchar():
 
 
 
-sum = 0
-line = ""
 while True:
-    if ser.inWaiting():
-        c = ser.read()
-        u = ord(c)
-        if u == 2:
-            sum = 0
-            line = ""
-        else:
-            if u == 3:
-                if (sum&0xff) == 0:
-                    #print "/%c%s"%(line[1],line[3:-1])
-                    try:
-                        (k,v) = line[3:-1].split("=")
-                        k = "us/co/montrose/1001s2nd/warmdirt/%c%s"%(line[1],k)
-                        mqtt.publish(k,v, qos=0, retain=False)
-                        print time.strftime("%m-%d-%Y %H:%M:%S", time.localtime(time.time())),
-                        print "%-30s %s"%(k[33:],v)
-                    except:
-                        print line
-                        traceback.print_exc(file=sys.stdout)
-            else:
-                sum += u
-                line += c
+    mqtt = mosquitto.Mosquitto("warmdirt")
+    mqtt.connect("localhost")
+    mqtt.on_connect = on_connect
 
-#        if u > 29 and u < 123:
-#            print "%-4d %c"%(u,c)
-#        else:
-#            print "%-4d   "%(u)
-    mqtt.loop(0)
+    sum = 0
+    line = ""
+    while True:
+        if ser.inWaiting():
+            c = ser.read()
+            u = ord(c)
+            if u == 2:
+                sum = 0
+                line = ""
+            else:
+                if u == 3:
+                    if (sum&0xff) == 0:
+                        #print "/%c%s"%(line[1],line[3:-1])
+                        try:
+                            (k,v) = line[3:-1].split("=")
+                            k = "us/co/montrose/1001s2nd/warmdirt/%c%s"%(line[1],k)
+                            mqtt.publish(k,v, qos=0, retain=False)
+                            print time.strftime("%m-%d-%Y %H:%M:%S", time.localtime(time.time())),
+                            print "%-30s %s"%(k[33:],v)
+                        except:
+                            print line
+                            traceback.print_exc(file=sys.stdout)
+                else:
+                    sum += u
+                    line += c
+
+#            if u > 29 and u < 123:
+#                print "%-4d %c"%(u,c)
+#            else:
+#                print "%-4d   "%(u)
+        if mqtt.loop(0) != 0:
+            break
+    mqtt.disconnect()
+    print "sleeping for 10"
+    sleep(10)
+
 

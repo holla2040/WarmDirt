@@ -18,7 +18,7 @@ DHT dht(DHTPIN, DHTTYPE);
 Stepper stepper(15,PINMOTORAIN,PINMOTORBIN);
 
 double pidsetpoint, pidinput, pidoutput; 
-PID pid(&pidinput, &pidoutput, &pidsetpoint,5,0.1,1, DIRECT);
+PID pid(&pidinput, &pidoutput, &pidsetpoint,50,2,1,DIRECT);
 
 int windowSize = 5000;
 unsigned long windowStartTime;
@@ -346,7 +346,7 @@ void WarmDirt::sendPacketKeyValue(uint8_t address, char type, char *key, char *v
 void WarmDirt::temperatureLoop() {
     if (temperatureControl) {
         //Serial.print("temperatureLoop ");
-        pidinput = getPottedDirtTemperature();
+        pidinput = getHeatedDirtTemperature();
         pid.Compute();
         //Serial.print(pidinput);
         //Serial.print(" ");
