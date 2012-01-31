@@ -50,6 +50,7 @@ while True:
 
     sum = 0
     line = ""
+    len  = -9999 #
     while True:
         if ser.inWaiting():
             c = ser.read()
@@ -57,8 +58,16 @@ while True:
             if u == 2:
                 sum = 0
                 line = ""
+                len = 9999 # startup condition
             else:
-                if u == 3:
+#                if u > 29 and u < 123:
+#                    print "%-4d %-4d %c"%(len,u,c)
+#                else:
+#                    print "%-4d %-4d   "%(len,u)
+
+                if len == 9999:
+                    len = u
+                if len == -2:
                     if (sum&0xff) == 0:
                         #print "/%c%s"%(line[1],line[3:-1])
                         try:
@@ -73,11 +82,7 @@ while True:
                 else:
                     sum += u
                     line += c
-
-#            if u > 29 and u < 123:
-#                print "%-4d %c"%(u,c)
-#            else:
-#                print "%-4d   "%(u)
+                len  -= 1
         if mqtt.loop(0) != 0:
             break
     mqtt.disconnect()

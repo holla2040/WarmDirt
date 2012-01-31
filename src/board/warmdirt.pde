@@ -35,7 +35,7 @@ void reset() {
 void setup() {                
     Serial.begin(57600);
     wd.sendPacketKeyValue(address,KV,"/data/setup","1");
-    wd.setTemperatureSetPoint(53.0,1);
+    wd.setTemperatureSetPoint(48.0,1);
 }
 
 void commProcess(int c) {
@@ -196,8 +196,6 @@ void statusLoop() {
         delay(100);
 
 
-
-
         sprintf(buffer,"%d",wd.getLidSwitchClosed());
         wd.sendPacketKeyValue(address,KV, "/data/lidswitch",buffer);
         delay(100);
@@ -217,6 +215,7 @@ void statusLoop() {
         ftoa(buffer,wd.getPIDOutput(),1);
         wd.sendPacketKeyValue(address,KV,"/data/pidoutput",buffer);
         delay(100);
+
 
 
 

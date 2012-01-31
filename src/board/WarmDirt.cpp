@@ -18,7 +18,7 @@ DHT dht(DHTPIN, DHTTYPE);
 Stepper stepper(15,PINMOTORAIN,PINMOTORBIN);
 
 double pidsetpoint, pidinput, pidoutput; 
-PID pid(&pidinput, &pidoutput, &pidsetpoint,50,2,1,DIRECT);
+PID pid(&pidinput, &pidoutput, &pidsetpoint,30,2,1,DIRECT);
 
 int windowSize = 5000;
 unsigned long windowStartTime;
@@ -346,13 +346,19 @@ void WarmDirt::sendPacketKeyValue(uint8_t address, char type, char *key, char *v
 void WarmDirt::temperatureLoop() {
     if (temperatureControl) {
         //Serial.print("temperatureLoop ");
-        pidinput = getHeatedDirtTemperature();
+        pidinput = getPottedDirtTemperature();
         pid.Compute();
         //Serial.print(pidinput);
         //Serial.print(" ");
         //Serial.print(pidoutput);
         //Serial.print(" ");
         //Serial.println(pidsetpoint);
+
+        if (getLightSensor() < 500) {
+            if (pidoutput < 1500.0) {
+                pidoutput = 1500.0;
+            }
+        }
 
         if(millis() - windowStartTime>windowSize) { //time to shift the Relay Window
             windowStartTime += windowSize;
