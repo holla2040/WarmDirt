@@ -355,8 +355,8 @@ void WarmDirt::temperatureLoop() {
         //Serial.println(pidsetpoint);
 
         if (getLightSensor() < 500) {
-            if (pidoutput < 1000.0) {
-                pidoutput = 1000.0;
+            if (pidoutput < 700.0) {
+                pidoutput = 700.0;
             }
         }
 

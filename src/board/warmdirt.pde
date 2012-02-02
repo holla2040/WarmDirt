@@ -35,7 +35,7 @@ void reset() {
 void setup() {                
     Serial.begin(57600);
     wd.sendPacketKeyValue(address,KV,"/data/setup","1");
-    wd.setTemperatureSetPoint(48.0,1);
+    wd.setTemperatureSetPoint(47.0,1);
 }
 
 void commProcess(int c) {
