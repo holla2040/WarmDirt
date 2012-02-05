@@ -1,9 +1,11 @@
 #include <stdint.h>
 #include "WarmDirt.h"
+#include "PID_v1.h"
 
 #define STATUSUPDATEINVTERVAL   30000
 #define ACTIVITYUPDATEINVTERVAL 500
 
+extern PID pid;
 
 char *ftoa(char *a, double f, int precision) {
   long p[] = {0,10,100,1000,10000,100000,1000000,10000000,100000000};
@@ -35,7 +37,7 @@ void reset() {
 void setup() {                
     Serial.begin(57600);
     wd.sendPacketKeyValue(address,KV,"/data/setup","1");
-    wd.setTemperatureSetPoint(47.0,1);
+    wd.setTemperatureSetPoint(57.0,1);
 }
 
 void commProcess(int c) {
@@ -214,6 +216,18 @@ void statusLoop() {
 
         ftoa(buffer,wd.getPIDOutput(),1);
         wd.sendPacketKeyValue(address,KV,"/data/pidoutput",buffer);
+        delay(100);
+
+        ftoa(buffer,pid.ppart,1);
+        wd.sendPacketKeyValue(address,KV,"/data/ppart",buffer);
+        delay(100);
+
+        ftoa(buffer,pid.ipart,1);
+        wd.sendPacketKeyValue(address,KV,"/data/ipart",buffer);
+        delay(100);
+
+        ftoa(buffer,pid.dpart,1);
+        wd.sendPacketKeyValue(address,KV,"/data/dpart",buffer);
         delay(100);
 
 

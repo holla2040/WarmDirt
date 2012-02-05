@@ -87,6 +87,4 @@ while True:
             break
     mqtt.disconnect()
     print "sleeping for 10"
-    sleep(10)
-
-
+    time.sleep(10)

@@ -346,7 +346,7 @@ void WarmDirt::sendPacketKeyValue(uint8_t address, char type, char *key, char *v
 void WarmDirt::temperatureLoop() {
     if (temperatureControl) {
         //Serial.print("temperatureLoop ");
-        pidinput = getPottedDirtTemperature();
+        pidinput = getHeatedDirtTemperature();
         pid.Compute();
         //Serial.print(pidinput);
         //Serial.print(" ");
