@@ -26,7 +26,7 @@ def getchar():
         old = termios.tcgetattr(fd)
         new = termios.tcgetattr(fd)
         new[3] = new[3] & ~termios.ICANON & ~termios.ECHO
-        new[6] [termios.VMIN] = 1
+        new[6] [termios.VMIN] = 0
         new[6] [termios.VTIME] = 0
 
         try:
@@ -85,6 +85,9 @@ while True:
                 len  -= 1
         if mqtt.loop(0) != 0:
             break
+        c = getchar()
+        if c:
+            ser.write(c)
     mqtt.disconnect()
     print "sleeping for 10"
     time.sleep(10)

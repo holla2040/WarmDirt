@@ -18,7 +18,7 @@ DHT dht(DHTPIN, DHTTYPE);
 Stepper stepper(15,PINMOTORAIN,PINMOTORBIN);
 
 double pidsetpoint, pidinput, pidoutput; 
-PID pid(&pidinput, &pidoutput, &pidsetpoint,30,2,1,DIRECT);
+PID pid(&pidinput, &pidoutput, &pidsetpoint,100,2,1,DIRECT);
 
 int windowSize = 5000;
 unsigned long windowStartTime;
@@ -355,8 +355,8 @@ void WarmDirt::temperatureLoop() {
         //Serial.println(pidsetpoint);
 
         if (getLightSensor() < 500) {
-            if (pidoutput < 700.0) {
-                pidoutput = 700.0;
+            if (pidoutput < 70.0) {
+                pidoutput = 70.0;
             }
         }
 

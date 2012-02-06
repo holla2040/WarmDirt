@@ -6,6 +6,7 @@
 #define ACTIVITYUPDATEINVTERVAL 500
 
 extern PID pid;
+double settemp = 60.0;
 
 char *ftoa(char *a, double f, int precision) {
   long p[] = {0,10,100,1000,10000,100000,1000000,10000000,100000000};
@@ -37,7 +38,7 @@ void reset() {
 void setup() {                
     Serial.begin(57600);
     wd.sendPacketKeyValue(address,KV,"/data/setup","1");
-    wd.setTemperatureSetPoint(57.0,1);
+    wd.setTemperatureSetPoint(settemp,1);
 }
 
 void commProcess(int c) {
@@ -47,6 +48,16 @@ void commProcess(int c) {
             break;
         case 'R':
             reset();
+            break;
+        case '5':
+            settemp -= 1;
+            wd.setTemperatureSetPoint(settemp,1);
+            nextIdleStatusUpdate = 0;
+            break;
+        case '6':
+            settemp += 1;
+            wd.setTemperatureSetPoint(settemp,1);
+            nextIdleStatusUpdate = 0;
             break;
         case 'a':
             Serial.print("a");
@@ -173,7 +184,7 @@ void statusLoop() {
         sprintf(buffer,"%ld",now);
         wd.sendPacketKeyValue(address,KV,"/data/uptime",buffer);
 
-        sprintf(buffer,"%d",wd.getTemperatureSetPoint());
+        ftoa(buffer,wd.getTemperatureSetPoint(),1);
         wd.sendPacketKeyValue(address,KV,"/data/temperaturesetpoint",buffer);
         delay(100);
 
@@ -219,15 +230,15 @@ void statusLoop() {
         delay(100);
 
         ftoa(buffer,pid.ppart,1);
-        wd.sendPacketKeyValue(address,KV,"/data/ppart",buffer);
+        wd.sendPacketKeyValue(address,KV,"/data/pidp",buffer);
         delay(100);
 
         ftoa(buffer,pid.ipart,1);
-        wd.sendPacketKeyValue(address,KV,"/data/ipart",buffer);
+        wd.sendPacketKeyValue(address,KV,"/data/pidi",buffer);
         delay(100);
 
         ftoa(buffer,pid.dpart,1);
-        wd.sendPacketKeyValue(address,KV,"/data/dpart",buffer);
+        wd.sendPacketKeyValue(address,KV,"/data/pidd",buffer);
         delay(100);
 
 
