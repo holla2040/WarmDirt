@@ -6,15 +6,21 @@
 #define ACTIVITYUPDATEINVTERVAL 500
 
 int lightstate;
-#define LIGHTONDURATION             120000
+#define LIGHTONDURATION             7200000L
 #define LIGHTTHRESHOLD              500
 #define STATELIGHTABOVETHRESHOLD    'a'
 #define STATELIGHTON                '1'
 #define STATELIGHTOFF               '0'
-uint32_t lightofftime;
+#define STATELIGHTTEMPON            't'
+#define STATELIGHTTEMPONDURATION    600000
+uint32_t lightUpdate;
 
 extern PID pid;
 double settemp = 55.0;
+
+double pdpidsetpoint, pdpidinput, pdpidoutput;
+PID pdpid(&pdpidinput, &pdpidoutput, &pdpidsetpoint,1,0.0001,1,DIRECT);
+
 
 char *ftoa(char *a, double f, int precision) {
   long p[] = {0,10,100,1000,10000,100000,1000000,10000000,100000000};
@@ -48,6 +54,9 @@ void setup() {
     wd.sendPacketKeyValue(address,KV,"/data/setup","1");
     wd.setTemperatureSetPoint(settemp,1);
     lightstate = STATELIGHTOFF;
+    pdpid.SetOutputLimits(50,65);
+    pdpid.SetMode(AUTOMATIC);
+    pdpidsetpoint = 48.0;
 }
 
 void commProcess(int c) {
@@ -90,9 +99,12 @@ void commProcess(int c) {
                     Serial.print((char)c);
                     if (c == '0') {
                         wd.load1Off();
+                        lightstate = STATELIGHTOFF;
                     }
                     if (c == '1') {
                         wd.load1On();
+                        lightstate = STATELIGHTTEMPON;
+                        lightUpdate = millis() + STATELIGHTTEMPONDURATION;
                     }
                 }
             }
@@ -250,8 +262,21 @@ void statusLoop() {
         wd.sendPacketKeyValue(address,KV,"/data/pidd",buffer);
         delay(100);
 
-        sprintf(buffer,"%c",lightstate);
-        wd.sendPacketKeyValue(address,KV,"/data/light",buffer);
+        switch (lightstate) {
+            case STATELIGHTON:
+                sprintf(buffer,"timed on %ds",(lightUpdate - millis())/1000);
+                break;
+            case STATELIGHTOFF:
+                sprintf(buffer,"off");
+                break;
+            case STATELIGHTTEMPON:
+                sprintf(buffer,"temp on %ds",(lightUpdate - millis())/1000);
+                break;
+            case STATELIGHTABOVETHRESHOLD:
+                sprintf(buffer,"sunlight");
+                break;
+        }
+        wd.sendPacketKeyValue(address,KV,"/data/lightstate",buffer);
         delay(100);
 
 
@@ -285,15 +310,21 @@ void lightLoop() {
         if (l < LIGHTTHRESHOLD) {
             wd.load1On();
             lightstate = STATELIGHTON;
-            lightofftime = millis() + LIGHTONDURATION;
+            lightUpdate = millis() + LIGHTONDURATION;
         }
     }
-    if (lightstate == STATELIGHTON) {
-        if (millis() > lightofftime) {
+    if (lightstate == STATELIGHTON || lightstate == STATELIGHTTEMPON) {
+        if (millis() > lightUpdate) {
             wd.load1Off();
             lightstate = STATELIGHTOFF;
         }
     }
+}
+
+void temperatureLoop() {
+    pdpidinput = wd.getPottedDirtTemperature();
+    pdpid.Compute();
+    wd.setTemperatureSetPoint(pdpidoutput,1);
 }
 
 void loop() {
@@ -301,4 +332,5 @@ void loop() {
     commLoop();
     wd.loop();
     lightLoop();
+    temperatureLoop();
 }
