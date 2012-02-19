@@ -8,7 +8,32 @@ import socket
 import mosquitto, time
 import traceback
 
+PORT=7764
+
+import BaseHTTPServer, SimpleHTTPServer, cgi
+
+
 ser = serial.Serial('/dev/ttyUSB0', 57600,timeout=1)
+
+class ReqHandler (SimpleHTTPServer.SimpleHTTPRequestHandler) :
+    def do_GET(self) :
+        if self.path=='/light=on':
+            self.send_response(204)
+            self.end_headers()
+            ser.write("a11s")
+            return
+        elif self.path=='/light=off':
+            ser.write("a10s")
+            self.send_response(204)
+            #self.send_header('Content-type','text/html')
+            self.end_headers()
+            return
+        else:
+            SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
+
+http = BaseHTTPServer.HTTPServer(('',PORT),ReqHandler)
+print 'http port=%d'%PORT
+http.socket.settimeout(0.1)
 
 def on_connect(rc):
     if rc == 0:
@@ -85,6 +110,8 @@ while True:
                     sum += u
                     line += c
                 len  -= 1
+        else:
+            http.handle_request()
         if mqtt.loop(0) != 0:
             break
         c = getchar()
