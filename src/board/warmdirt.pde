@@ -14,7 +14,7 @@ int lightstate;
 uint32_t lightofftime;
 
 extern PID pid;
-double settemp = 60.0;
+double settemp = 55.0;
 
 char *ftoa(char *a, double f, int precision) {
   long p[] = {0,10,100,1000,10000,100000,1000000,10000000,100000000};
@@ -248,6 +248,10 @@ void statusLoop() {
 
         ftoa(buffer,pid.dpart,1);
         wd.sendPacketKeyValue(address,KV,"/data/pidd",buffer);
+        delay(100);
+
+        sprintf(buffer,"%c",lightstate);
+        wd.sendPacketKeyValue(address,KV,"/data/light",buffer);
         delay(100);
 
 
