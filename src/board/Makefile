@@ -10,10 +10,10 @@ CONSOLE_BAUDRATE        = 57600
 AVRDUDE_ARD_BAUDRATE    = 57600
 #AVRDUDE_ARD_BAUDRATE   = 115200
 
-ARDUINO_DIR             = /opt/arduino
+ARDUINO_DIR             = /opt/arduino-0022
 AVR_TOOLS_PATH          = /usr/bin
 AVRDUDE_ARD_PROGRAMMER  = stk500v1
-AVRDUDE                 = /opt/arduino/hardware/tools/avrdude
+AVRDUDE                 = /opt/arduino-0022/hardware/tools/avrdude
                                             
 F_CPU                   = 16000000
 ARDUINO_PORT            = /dev/$(DEVICE_FILE)
