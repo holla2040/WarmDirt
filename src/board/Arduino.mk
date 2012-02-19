@@ -409,6 +409,7 @@ AVRDUDE_ISP_OPTS = -P $(ISP_PORT) $(ISP_PROG)
 #
 
 all: 		$(OBJDIR) $(TARGET_HEX)
+	avr-size -C --mcu=$(MCU) build-cli/$(TARGET).elf
 
 $(OBJDIR):
 		mkdir $(OBJDIR)

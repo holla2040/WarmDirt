@@ -17,10 +17,6 @@ def on_connect(rc):
     else:
         print "mqtt onnected unsuccessfully."
 
-mqtt = mosquitto.Mosquitto("warmdirt")
-mqtt.connect("localhost")
-mqtt.on_connect = on_connect
-
 print "console.py"
 
 def getchar():
@@ -30,7 +26,7 @@ def getchar():
         old = termios.tcgetattr(fd)
         new = termios.tcgetattr(fd)
         new[3] = new[3] & ~termios.ICANON & ~termios.ECHO
-        new[6] [termios.VMIN] = 1
+        new[6] [termios.VMIN] = 0
         new[6] [termios.VTIME] = 0
 
         try:
@@ -47,35 +43,53 @@ def getchar():
 
 
 
-sum = 0
-line = ""
 while True:
-    if ser.inWaiting():
-        c = ser.read()
-        u = ord(c)
-        if u == 2:
-            sum = 0
-            line = ""
-        else:
-            if u == 3:
-                if (sum&0xff) == 0:
-                    #print "/%c%s"%(line[1],line[3:-1])
-                    try:
-                        (k,v) = line[3:-1].split("=")
-                        k = "us/co/montrose/1001s2nd/warmdirt/%c%s"%(line[1],k)
-                        mqtt.publish(k,v, qos=0, retain=False)
-                        print time.strftime("%m-%d-%Y %H:%M:%S", time.localtime(time.time())),
-                        print "%-30s %s"%(k[33:],v)
-                    except:
-                        print line
-                        traceback.print_exc(file=sys.stdout)
+    mqtt = mosquitto.Mosquitto("warmdirt")
+    mqtt.connect("localhost")
+    mqtt.on_connect = on_connect
+
+    sum = 0
+    line = ""
+    len  = -9999 #
+    while True:
+        if ser.inWaiting():
+            c = ser.read()
+            u = ord(c)
+            if u == 2:
+                sum = 0
+                line = ""
+                len = 9999 # startup condition
             else:
-                sum += u
-                line += c
+#                if u > 29 and u < 123:
+#                    print "%-4d %-4d %c"%(len,u,c)
+#                else:
+#                    print "%-4d %-4d   "%(len,u)
 
-#        if u > 29 and u < 123:
-#            print "%-4d %c"%(u,c)
-#        else:
-#            print "%-4d   "%(u)
-    mqtt.loop(0)
-
+                if len == 9999:
+                    len = u
+                if len == -2:
+                    if (sum&0xff) == 0:
+                        #print "/%c%s"%(line[1],line[3:-1])
+                        try:
+                            (k,v) = line[3:-1].split("=")
+                            k = "us/co/montrose/1001s2nd/warmdirt/%c%s"%(line[1],k)
+                            mqtt.publish(k,v, qos=0, retain=False)
+                            if k.count("uptime"):
+                                print
+                            print time.strftime("%m-%d-%Y %H:%M:%S", time.localtime(time.time())),
+                            print "%-30s %s"%(k[33:],v)
+                        except:
+                            print line
+                            traceback.print_exc(file=sys.stdout)
+                else:
+                    sum += u
+                    line += c
+                len  -= 1
+        if mqtt.loop(0) != 0:
+            break
+        c = getchar()
+        if c:
+            ser.write(c)
+    mqtt.disconnect()
+    print "sleeping for 10"
+    time.sleep(10)

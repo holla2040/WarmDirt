@@ -20,7 +20,7 @@ Requirements
     Control
         Heater 0
         Heater 1
-        DC Motor
+        DC Motor - Stepper or 2 Servos
 
     Communication
         XBEE
