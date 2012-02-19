@@ -6,12 +6,14 @@
 #define ACTIVITYUPDATEINVTERVAL 500
 
 int lightstate;
-#define LIGHTONDURATION             120000
+#define LIGHTONDURATION             7200000L
 #define LIGHTTHRESHOLD              500
 #define STATELIGHTABOVETHRESHOLD    'a'
 #define STATELIGHTON                '1'
 #define STATELIGHTOFF               '0'
-uint32_t lightofftime;
+#define STATELIGHTTEMPON            't'
+#define STATELIGHTTEMPONDURATION    600000
+uint32_t lightUpdate;
 
 extern PID pid;
 double settemp = 55.0;
@@ -93,6 +95,8 @@ void commProcess(int c) {
                     }
                     if (c == '1') {
                         wd.load1On();
+                        lightstate = STATELIGHTTEMPON;
+                        lightUpdate = millis() + STATELIGHTTEMPONDURATION;
                     }
                 }
             }
@@ -250,7 +254,20 @@ void statusLoop() {
         wd.sendPacketKeyValue(address,KV,"/data/pidd",buffer);
         delay(100);
 
-        sprintf(buffer,"%c",lightstate);
+        switch (lightstate) {
+            case STATELIGHTON:
+                sprintf(buffer,"on");
+                break;
+            case STATELIGHTOFF:
+                sprintf(buffer,"off");
+                break;
+            case STATELIGHTTEMPON:
+                sprintf(buffer,"tempon %d",(lightUpdate - millis())/1000);
+                break;
+            case STATELIGHTABOVETHRESHOLD:
+                sprintf(buffer,"sunlight");
+                break;
+        }
         wd.sendPacketKeyValue(address,KV,"/data/lightstate",buffer);
         delay(100);
 
@@ -285,11 +302,11 @@ void lightLoop() {
         if (l < LIGHTTHRESHOLD) {
             wd.load1On();
             lightstate = STATELIGHTON;
-            lightofftime = millis() + LIGHTONDURATION;
+            lightUpdate = millis() + LIGHTONDURATION;
         }
     }
-    if (lightstate == STATELIGHTON) {
-        if (millis() > lightofftime) {
+    if (lightstate == STATELIGHTON || lightstate == STATELIGHTTEMPON) {
+        if (millis() > lightUpdate) {
             wd.load1Off();
             lightstate = STATELIGHTOFF;
         }
