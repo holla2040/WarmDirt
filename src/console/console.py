@@ -74,6 +74,8 @@ while True:
                             (k,v) = line[3:-1].split("=")
                             k = "us/co/montrose/1001s2nd/warmdirt/%c%s"%(line[1],k)
                             mqtt.publish(k,v, qos=0, retain=False)
+                            if k.count("uptime"):
+                                print
                             print time.strftime("%m-%d-%Y %H:%M:%S", time.localtime(time.time())),
                             print "%-30s %s"%(k[33:],v)
                         except:

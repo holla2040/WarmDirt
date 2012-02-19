@@ -5,6 +5,14 @@
 #define STATUSUPDATEINVTERVAL   30000
 #define ACTIVITYUPDATEINVTERVAL 500
 
+int lightstate;
+#define LIGHTONDURATION             120000
+#define LIGHTTHRESHOLD              500
+#define STATELIGHTABOVETHRESHOLD    'a'
+#define STATELIGHTON                '1'
+#define STATELIGHTOFF               '0'
+uint32_t lightofftime;
+
 extern PID pid;
 double settemp = 60.0;
 
@@ -39,6 +47,7 @@ void setup() {
     Serial.begin(57600);
     wd.sendPacketKeyValue(address,KV,"/data/setup","1");
     wd.setTemperatureSetPoint(settemp,1);
+    lightstate = STATELIGHTOFF;
 }
 
 void commProcess(int c) {
@@ -260,9 +269,32 @@ void statusLoop() {
     }
 }
 
+void lightLoop() {
+    int l = wd.getLightSensor();
+    if (lightstate == STATELIGHTOFF) {
+        if (l > (LIGHTTHRESHOLD + 100)) {
+            lightstate = STATELIGHTABOVETHRESHOLD;
+            wd.load1Off();
+        }
+    }
+    if (lightstate == STATELIGHTABOVETHRESHOLD) {
+        if (l < LIGHTTHRESHOLD) {
+            wd.load1On();
+            lightstate = STATELIGHTON;
+            lightofftime = millis() + LIGHTONDURATION;
+        }
+    }
+    if (lightstate == STATELIGHTON) {
+        if (millis() > lightofftime) {
+            wd.load1Off();
+            lightstate = STATELIGHTOFF;
+        }
+    }
+}
+
 void loop() {
     statusLoop();
     commLoop();
     wd.loop();
+    lightLoop();
 }
-
