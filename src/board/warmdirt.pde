@@ -251,7 +251,7 @@ void statusLoop() {
         delay(100);
 
         sprintf(buffer,"%c",lightstate);
-        wd.sendPacketKeyValue(address,KV,"/data/light",buffer);
+        wd.sendPacketKeyValue(address,KV,"/data/lightstate",buffer);
         delay(100);
 
 
