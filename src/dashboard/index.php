@@ -66,6 +66,9 @@
         graphload();
         setInterval(statusload,60000);
         setInterval(graphload,240000);
+        $("#lightlabel").click(function() {
+            setTimeout(statusload,5000);
+        });
     });
 </script>
 
