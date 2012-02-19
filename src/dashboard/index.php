@@ -50,6 +50,13 @@
             } else {
                 $("#load0on").html("Off");
             }
+            if (data.load1on == '1') {
+                $("#lightlabel").html("<a href='http://192.168.0.117:7764/light=off'>Light</a>");
+                $("#light").html("On");
+            } else {
+                $("#lightlabel").html("<a href='http://192.168.0.117:7764/light=on'>Light</a>");
+                $("#light").html("Off");
+            }
             $("#extra").html(data.pidoutput);
         });
     }
@@ -67,7 +74,10 @@
 <center>
 <table id='datatable'>
 <div id='header'>Warm Dirt Status</div>
-<tr><td class='label'>Last Update</td><td class='data' id="timestamp"></td></tr>
+<tr>
+    <td class='label'>Last Update</td><td class='data' id="timestamp"></td>
+    <td class='label' id='lightlabel'>Light</td> <td class='data' id="light"> </td>
+</tr>
 <tr>
     <td class='label'>Greenhouse Air</td><td class='data' id="temperatureboxexterior"> </td>
     <td class='label'>Potted Dirt</td> <td class='data' id="temperaturepotteddirt"> </td>
