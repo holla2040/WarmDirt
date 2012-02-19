@@ -45,11 +45,8 @@
             $("#temperaturepotteddirt").html(data.temperaturepotteddirt);
             $("#temperatureboxexterior").html(data.temperatureboxexterior);
             $("#temperatureboxinterior").html(data.temperatureboxinterior);
-            if (data.load0on == '1') {
-                $("#load0on").html("On");
-            } else {
-                $("#load0on").html("Off");
-            }
+            $("#extral").html(data.temperaturesetpoint);
+
             if (data.load1on == '1') {
                 $("#lightlabel").html("<a href='http://192.168.0.117:7764/light=off'>Light</a>");
                 $("#light").html("On");
@@ -57,7 +54,7 @@
                 $("#lightlabel").html("<a href='http://192.168.0.117:7764/light=on'>Light</a>");
                 $("#light").html("Off");
             }
-            $("#extra").html(data.pidoutput);
+            $("#extrar").html(data.pidoutput);
         });
     }
 
@@ -90,8 +87,8 @@
     <td class='label'>Heated Dirt</td> <td class='data' id="temperatureheateddirt"> </td>
 </tr>
 <tr>
-    <td class='label'>Heater</td><td class='data' id="load0on"> </td>
-    <td class='label'>PID Out </td> <td class='data' id="extra"> </td>
+    <td class='label'>Heated Set</td><td class='data' id="extral"> </td>
+    <td class='label'>PID Out </td> <td class='data' id="extrar"> </td>
 </tr>
 </table>
 <div id='graphdiv'>
