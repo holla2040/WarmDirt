@@ -18,6 +18,10 @@ uint32_t lightUpdate;
 extern PID pid;
 double settemp = 55.0;
 
+double pdpidsetpoint, pdpidinput, pdpidoutput;
+PID pdpid(&pdpidinput, &pdpidoutput, &pdpidsetpoint,1,0.0001,1,DIRECT);
+
+
 char *ftoa(char *a, double f, int precision) {
   long p[] = {0,10,100,1000,10000,100000,1000000,10000000,100000000};
 
@@ -50,6 +54,9 @@ void setup() {
     wd.sendPacketKeyValue(address,KV,"/data/setup","1");
     wd.setTemperatureSetPoint(settemp,1);
     lightstate = STATELIGHTOFF;
+    pdpid.SetOutputLimits(50,65);
+    pdpid.SetMode(AUTOMATIC);
+    pdpidsetpoint = 48.0;
 }
 
 void commProcess(int c) {
@@ -314,9 +321,16 @@ void lightLoop() {
     }
 }
 
+void temperatureLoop() {
+    pdpidinput = wd.getPottedDirtTemperature();
+    pdpid.Compute();
+    wd.setTemperatureSetPoint(pdpidoutput,1);
+}
+
 void loop() {
     statusLoop();
     commLoop();
     wd.loop();
     lightLoop();
+    temperatureLoop();
 }
