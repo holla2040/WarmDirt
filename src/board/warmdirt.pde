@@ -92,6 +92,7 @@ void commProcess(int c) {
                     Serial.print((char)c);
                     if (c == '0') {
                         wd.load1Off();
+                        lightstate = STATELIGHTOFF;
                     }
                     if (c == '1') {
                         wd.load1On();
@@ -256,13 +257,13 @@ void statusLoop() {
 
         switch (lightstate) {
             case STATELIGHTON:
-                sprintf(buffer,"on");
+                sprintf(buffer,"timed on %ds",(lightUpdate - millis())/1000);
                 break;
             case STATELIGHTOFF:
                 sprintf(buffer,"off");
                 break;
             case STATELIGHTTEMPON:
-                sprintf(buffer,"tempon %d",(lightUpdate - millis())/1000);
+                sprintf(buffer,"temp on %ds",(lightUpdate - millis())/1000);
                 break;
             case STATELIGHTABOVETHRESHOLD:
                 sprintf(buffer,"sunlight");
