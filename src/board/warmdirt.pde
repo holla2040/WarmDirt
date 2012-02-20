@@ -300,11 +300,10 @@ void statusLoop() {
 
 void lightLoop() {
     int l = wd.getLightSensor();
-    if (lightstate == STATELIGHTOFF) {
-        if (l > (LIGHTTHRESHOLD + 100)) {
-            lightstate = STATELIGHTABOVETHRESHOLD;
-            wd.load1Off();
-        }
+    if (l > (LIGHTTHRESHOLD + 100)) {
+        lightstate = STATELIGHTABOVETHRESHOLD;
+        wd.load1Off();
+        return;
     }
     if (lightstate == STATELIGHTABOVETHRESHOLD) {
         if (l < LIGHTTHRESHOLD) {
