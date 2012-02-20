@@ -30,7 +30,7 @@
 <script src="jquery.js"></script>
 <script type="text/javascript">
     function graphload() {
-        var url = "/kv.php?imageonly=1&width=640&height=480&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureboxexterior&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureboxinterior&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureheateddirt&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperaturepotteddirt&multigraph=1&action=multi";
+        var url = "/kv.php?interval=24%20HOUR&imageonly=1&width=640&height=480&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureboxexterior&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureboxinterior&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureheateddirt&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperaturepotteddirt&multigraph=1&action=multi";
         var image1 = $('<img />').attr("src",url)
             .load(function(){
                 //$("#graph").attr("src", url); <img src="/images/graph.gif" id="graph" width="800" height="600"/>
@@ -49,11 +49,10 @@
 
             if (data.load1on == '1') {
                 $("#lightlabel").html("<a href='http://192.168.0.117:7764/light=off'>Light</a>");
-                $("#light").html("On");
             } else {
                 $("#lightlabel").html("<a href='http://192.168.0.117:7764/light=on'>Light</a>");
-                $("#light").html("Off");
             }
+            $("#light").html(data.lightstate);
             $("#extrar").html(data.pidoutput);
         });
     }
@@ -61,7 +60,7 @@
     $(document).ready(function(){
         statusload();
         graphload();
-        setInterval(statusload,60000);
+        setInterval(statusload,15000);
         setInterval(graphload,240000);
         $("#lightlabel").click(function() {
             setTimeout(statusload,5000);
