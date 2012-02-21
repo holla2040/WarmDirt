@@ -19,7 +19,7 @@ extern PID pid;
 double settemp = 55.0;
 
 double pdpidsetpoint, pdpidinput, pdpidoutput;
-PID pdpid(&pdpidinput, &pdpidoutput, &pdpidsetpoint,2,0.001,0.01,DIRECT);
+PID pdpid(&pdpidinput, &pdpidoutput, &pdpidsetpoint,10,0.001,0.01,DIRECT);
 
 
 char *ftoa(char *a, double f, int precision) {
