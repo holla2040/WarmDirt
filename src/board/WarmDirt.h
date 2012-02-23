@@ -88,8 +88,8 @@ class WarmDirt {
         void        loop();
         void        temperatureLoop();
         void        setTemperatureControl(boolean value);
-        void        setTemperatureSetPoint(int8_t value, int8_t hysteresis);
-        int8_t      getTemperatureSetPoint();
+        void        setTemperatureSetPoint(double value, int8_t hysteresis);
+        double      getTemperatureSetPoint();
         double      getPIDOutput();
         void        debug();
 
@@ -104,8 +104,8 @@ class WarmDirt {
         double      seriesResistorAux0;
         double      seriesResistorAux1;
         boolean     temperatureControl;  // should be persisted in EEPROM
-        int8_t      temperatureSetPoint; // should be persisted
-        int8_t      temperatureHysteresis; // should be persisted
+        double      temperatureSetPoint; // should be persisted
+        double      temperatureHysteresis; // should be persisted
 };
 
 #endif
