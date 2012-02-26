@@ -52,13 +52,14 @@ void PID::Compute() {
         /*Compute all the working error variables*/
         double input = *myInput;
         double error = *mySetpoint - input;
-        ITerm+= (ki * error);
+        ITerm += (ki * error);
+        ipartraw += (ki * error);
         if (ITerm > outMax) {
-            ITerm= outMax;
+            ITerm = outMax;
         }
         else {
             if (ITerm < outMin) {
-                 ITerm= outMin;
+                 ITerm = outMin;
             }
         } 
         double dInput = (input - lastInput);

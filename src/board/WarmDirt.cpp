@@ -393,7 +393,7 @@ void WarmDirt::setTemperatureControl(boolean value){
     temperatureControl = value;
 }
 
-void WarmDirt::setTemperatureSetPoint(int8_t value, int8_t hysteresis) {
+void WarmDirt::setTemperatureSetPoint(double value, int8_t hysteresis) {
     temperatureControl = 1;
     temperatureSetPoint = value;
     temperatureHysteresis = hysteresis;
@@ -403,6 +403,6 @@ void WarmDirt::setTemperatureSetPoint(int8_t value, int8_t hysteresis) {
     pid.SetMode(AUTOMATIC);
 }
 
-int8_t WarmDirt::getTemperatureSetPoint() {
+double WarmDirt::getTemperatureSetPoint() {
     return temperatureSetPoint;
 }

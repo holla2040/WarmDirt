@@ -19,7 +19,7 @@ extern PID pid;
 double settemp = 55.0;
 
 double pdpidsetpoint, pdpidinput, pdpidoutput;
-PID pdpid(&pdpidinput, &pdpidoutput, &pdpidsetpoint,1,0.0001,1,DIRECT);
+PID pdpid(&pdpidinput, &pdpidoutput, &pdpidsetpoint,10,0.001,0.01,DIRECT);
 
 
 char *ftoa(char *a, double f, int precision) {
@@ -188,7 +188,7 @@ void commLoop() {
 void statusLoop() {
     char buffer[30];
     uint32_t now = millis();
-    double hd,pd,bi,be,lc,hum;
+    double hd,pd,bi,be,lc,hum,ot;
     if (now > nextActivityUpdate) {
         wd.activityToggle();
         nextActivityUpdate = now + ACTIVITYUPDATEINVTERVAL;
@@ -199,31 +199,37 @@ void statusLoop() {
         pd  = wd.getPottedDirtTemperature();
         bi  = wd.getBoxInteriorTemperature();
         be  = wd.getBoxExteriorTemperature();
+        ot  = wd.getAux0Temperature();
         lc  = wd.getLoadACCurrent();
 //        hum = wd.getDHTHumidity();
 
         sprintf(buffer,"%ld",now);
         wd.sendPacketKeyValue(address,KV,"/data/uptime",buffer);
 
-        ftoa(buffer,wd.getTemperatureSetPoint(),1);
+        ftoa(buffer,wd.getTemperatureSetPoint(),2);
         wd.sendPacketKeyValue(address,KV,"/data/temperaturesetpoint",buffer);
         delay(100);
 
-        ftoa(buffer,hd,1);
+        ftoa(buffer,hd,2);
         wd.sendPacketKeyValue(address,KV,"/data/temperatureheateddirt",buffer);
         delay(100);
 
-        ftoa(buffer,pd,1);
+        ftoa(buffer,pd,2);
         wd.sendPacketKeyValue(address,KV,"/data/temperaturepotteddirt",buffer);
         delay(100);
 
-        ftoa(buffer,bi,1);
+        ftoa(buffer,bi,2);
         wd.sendPacketKeyValue(address,KV,"/data/temperatureboxinterior",buffer);
         delay(100);
 
-        ftoa(buffer,be,1);
+        ftoa(buffer,be,2);
         wd.sendPacketKeyValue(address,KV,"/data/temperatureboxexterior",buffer);
         delay(100);
+
+        ftoa(buffer,ot,2);
+        wd.sendPacketKeyValue(address,KV,"/data/temperatureoutside",buffer);
+        delay(100);
+
 
         sprintf(buffer,"%d",wd.getLightSensor());
         wd.sendPacketKeyValue(address,KV,"/data/lightlevel",buffer);
@@ -246,20 +252,40 @@ void statusLoop() {
         wd.sendPacketKeyValue(address,KV,"/data/loadcurrent",buffer);
         delay(100);
 
-        ftoa(buffer,wd.getPIDOutput(),1);
+        ftoa(buffer,wd.getPIDOutput(),2);
         wd.sendPacketKeyValue(address,KV,"/data/pidoutput",buffer);
         delay(100);
 
-        ftoa(buffer,pid.ppart,1);
+        ftoa(buffer,pid.ppart,2);
         wd.sendPacketKeyValue(address,KV,"/data/pidp",buffer);
         delay(100);
 
-        ftoa(buffer,pid.ipart,1);
+        ftoa(buffer,pid.ipart,2);
         wd.sendPacketKeyValue(address,KV,"/data/pidi",buffer);
         delay(100);
 
-        ftoa(buffer,pid.dpart,1);
+        ftoa(buffer,pid.dpart,2);
         wd.sendPacketKeyValue(address,KV,"/data/pidd",buffer);
+        delay(100);
+
+        ftoa(buffer,pdpidoutput,2);
+        wd.sendPacketKeyValue(address,KV,"/data/pdpidoutput",buffer);
+        delay(100);
+
+        ftoa(buffer,pdpid.ppart,2);
+        wd.sendPacketKeyValue(address,KV,"/data/pdpidp",buffer);
+        delay(100);
+
+        ftoa(buffer,pdpid.ipart,2);
+        wd.sendPacketKeyValue(address,KV,"/data/pdpidi",buffer);
+        delay(100);
+
+        ftoa(buffer,pdpid.ipartraw,2);
+        wd.sendPacketKeyValue(address,KV,"/data/pdpidiraw",buffer);
+        delay(100);
+
+        ftoa(buffer,pdpid.dpart,2);
+        wd.sendPacketKeyValue(address,KV,"/data/pdpidd",buffer);
         delay(100);
 
         switch (lightstate) {
@@ -273,7 +299,7 @@ void statusLoop() {
                 sprintf(buffer,"temp on %ds",(lightUpdate - millis())/1000);
                 break;
             case STATELIGHTABOVETHRESHOLD:
-                sprintf(buffer,"sunlight");
+                sprintf(buffer,"sunlight %d",wd.getLightSensor());
                 break;
         }
         wd.sendPacketKeyValue(address,KV,"/data/lightstate",buffer);
@@ -300,7 +326,7 @@ void statusLoop() {
 
 void lightLoop() {
     int l = wd.getLightSensor();
-    if (l > (LIGHTTHRESHOLD + 100)) {
+    if (l > (LIGHTTHRESHOLD + 150)) { // 150 is larger than light contribution
         lightstate = STATELIGHTABOVETHRESHOLD;
         wd.load1Off();
         return;
