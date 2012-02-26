@@ -84,11 +84,11 @@
 </tr>
 <tr>
     <td class='label' id='lightlabel'>Light</td> <td class='data' id="light"> </td>
-    <td class='label'>Potted Dirt</td> <td class='data' id="temperaturepotteddirt"> </td>
+    <td class='label'>Box Air</td><td class='data' id="temperatureboxinterior"> </td>
 </tr>
 <tr>
     <td class='label'>Heated Set</td><td class='data' id="extral"> </td>
-    <td class='label'>Box Air</td><td class='data' id="temperatureboxinterior"> </td>
+    <td class='label'>Potted Dirt</td> <td class='data' id="temperaturepotteddirt"> </td>
 </tr>
 <tr>
     <td class='label'>PID Out </td> <td class='data' id="extrar"> </td>
