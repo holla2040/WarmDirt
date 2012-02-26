@@ -30,7 +30,7 @@
 <script src="jquery.js"></script>
 <script type="text/javascript">
     function graphload() {
-        var url = "/kv.php?interval=24%20HOUR&imageonly=1&width=640&height=480&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureboxexterior&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureboxinterior&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureheateddirt&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperaturepotteddirt&multigraph=1&action=multi";
+        var url = "/kv.php?interval=24%20HOUR&imageonly=1&width=640&height=480&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureboxexterior&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureboxinterior&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureheateddirt&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperaturepotteddirt&keys[]=us/co/montrose/1001s2nd/warmdirt/1/data/temperatureoutside&multigraph=1&action=multi";
         var image1 = $('<img />').attr("src",url)
             .load(function(){
                 //$("#graph").attr("src", url); <img src="/images/graph.gif" id="graph" width="800" height="600"/>
@@ -45,6 +45,7 @@
             $("#temperaturepotteddirt").html(data.temperaturepotteddirt);
             $("#temperatureboxexterior").html(data.temperatureboxexterior);
             $("#temperatureboxinterior").html(data.temperatureboxinterior);
+            $("#temperatureoutside").html(data.temperatureoutside);
             $("#extral").html(data.temperaturesetpoint);
 
             if (data.load1on == '1') {
@@ -74,20 +75,24 @@
 <table id='datatable'>
 <div id='header'>Warm Dirt Status</div>
 <tr>
-    <td class='label'>Last Update</td><td class='data' id="timestamp"></td>
-    <td class='label' id='lightlabel'>Light</td> <td class='data' id="light"> </td>
+    <td class='label'> </td><td class='data' id="r1c1"></td>
+    <td class='label'>Outside Air</td> <td class='data' id="temperatureoutside"> </td>
 </tr>
 <tr>
+    <td class='label'>Last Update</td><td class='data' id="timestamp"></td>
     <td class='label'>Greenhouse Air</td><td class='data' id="temperatureboxexterior"> </td>
+</tr>
+<tr>
+    <td class='label' id='lightlabel'>Light</td> <td class='data' id="light"> </td>
     <td class='label'>Potted Dirt</td> <td class='data' id="temperaturepotteddirt"> </td>
 </tr>
 <tr>
+    <td class='label'>Heated Set</td><td class='data' id="extral"> </td>
     <td class='label'>Box Air</td><td class='data' id="temperatureboxinterior"> </td>
-    <td class='label'>Heated Dirt</td> <td class='data' id="temperatureheateddirt"> </td>
 </tr>
 <tr>
-    <td class='label'>Heated Set</td><td class='data' id="extral"> </td>
     <td class='label'>PID Out </td> <td class='data' id="extrar"> </td>
+    <td class='label'>Heated Dirt</td> <td class='data' id="temperatureheateddirt"> </td>
 </tr>
 </table>
 <div id='graphdiv'>
