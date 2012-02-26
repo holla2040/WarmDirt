@@ -188,7 +188,7 @@ void commLoop() {
 void statusLoop() {
     char buffer[30];
     uint32_t now = millis();
-    double hd,pd,bi,be,lc,hum;
+    double hd,pd,bi,be,lc,hum,ot;
     if (now > nextActivityUpdate) {
         wd.activityToggle();
         nextActivityUpdate = now + ACTIVITYUPDATEINVTERVAL;
@@ -199,6 +199,7 @@ void statusLoop() {
         pd  = wd.getPottedDirtTemperature();
         bi  = wd.getBoxInteriorTemperature();
         be  = wd.getBoxExteriorTemperature();
+        ot  = wd.getAux0Temperature();
         lc  = wd.getLoadACCurrent();
 //        hum = wd.getDHTHumidity();
 
@@ -224,6 +225,11 @@ void statusLoop() {
         ftoa(buffer,be,2);
         wd.sendPacketKeyValue(address,KV,"/data/temperatureboxexterior",buffer);
         delay(100);
+
+        ftoa(buffer,ot,2);
+        wd.sendPacketKeyValue(address,KV,"/data/temperatureoutside",buffer);
+        delay(100);
+
 
         sprintf(buffer,"%d",wd.getLightSensor());
         wd.sendPacketKeyValue(address,KV,"/data/lightlevel",buffer);
