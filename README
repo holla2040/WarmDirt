@@ -92,7 +92,7 @@ v1.1 - proposed
     * changed test point names
     add lipo circuit from here, http://www.sparkfun.com/products/10711
     added rectifier for AC current measurements per Application 4 - Rectified Output
-
+    replaced 74HC04 with 74HC2G04 (dual inverter)
 v1.0
     initial addition
 
