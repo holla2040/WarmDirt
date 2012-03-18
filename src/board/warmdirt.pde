@@ -259,16 +259,31 @@ void statusLoop() {
         wd.sendPacketKeyValue(address,KV, "/data/lidclosed",buffer);
         delay(100);
 
-        sprintf(buffer,"%c",lidstate);
-        wd.sendPacketKeyValue(address,KV,"/data/lidstate",buffer);
-        delay(100);
-
         if ((lidstate == LIDSTATEMOVINGUP) || (lidstate == LIDSTATEMOVINGDOWN)) {
             temp = lidMovingTimeout - millis();
             sprintf(buffer,"%ld", temp);
             wd.sendPacketKeyValue(address,KV,"/data/lidmovingtimeout",buffer);
             delay(100);
         }
+
+        switch (lidstate) {
+            case LIDSTATEDOWN:
+                sprintf(buffer,"closed");
+                break;
+            case LIDSTATEMOVINGUP:
+                sprintf(buffer,"opening %ds",temp/1000);
+                break;
+            case LIDSTATEUP:
+                sprintf(buffer,"open");
+                break;
+            case LIDSTATEMOVINGDOWN:
+                sprintf(buffer,"closing %ds",temp/1000);
+                break;
+        }
+        wd.sendPacketKeyValue(address,KV,"/data/lidstate",buffer);
+        delay(100);
+        
+
 
         sprintf(buffer,"%d",speedB);
         wd.sendPacketKeyValue(address,KV,"/data/lidmotorspeed",buffer);
