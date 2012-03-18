@@ -13,6 +13,17 @@ int lightstate;
 #define STATELIGHTOFF               '0'
 #define STATELIGHTTEMPON            't'
 #define STATELIGHTTEMPONDURATION    600000
+
+#define LIDUPTHRESHOLD              45.0 
+#define LIDDOWNTHRESHOLD            43.0
+#define LIDMOVINGTIME               420000
+#define LIDSTATEDOWN                'd'
+#define LIDSTATEMOVINGDOWN          'v'
+#define LIDSTATEMOVINGUP            '^'
+#define LIDSTATEUP                  'u'
+uint8_t lidstate;
+uint32_t lidMovingTimeout;
+
 uint32_t lightUpdate;
 
 extern PID pid;
@@ -57,6 +68,7 @@ void setup() {
     pdpid.SetOutputLimits(50,65);
     pdpid.SetMode(AUTOMATIC);
     pdpidsetpoint = 48.0;
+    lidstate = LIDSTATEDOWN;
 }
 
 void commProcess(int c) {
@@ -174,6 +186,12 @@ void commProcess(int c) {
             delay(10);
             wd.stepperDisable();
             break;
+        case 'd':
+            speedB = -100;
+            speedB = wd.motorBSpeed(speedB);
+            lidMovingTimeout = millis() + LIDMOVINGTIME;
+            lidstate = LIDSTATEMOVINGDOWN;
+            break;
    }
 }
 
@@ -187,6 +205,7 @@ void commLoop() {
 
 void statusLoop() {
     char buffer[30];
+    uint32_t temp;
     uint32_t now = millis();
     double hd,pd,bi,be,lc,hum,ot;
     if (now > nextActivityUpdate) {
@@ -201,7 +220,7 @@ void statusLoop() {
         be  = wd.getBoxExteriorTemperature();
         ot  = wd.getAux0Temperature();
         lc  = wd.getLoadACCurrent();
-//        hum = wd.getDHTHumidity();
+//      hum = wd.getDHTHumidity();
 
         sprintf(buffer,"%ld",now);
         wd.sendPacketKeyValue(address,KV,"/data/uptime",buffer);
@@ -237,7 +256,37 @@ void statusLoop() {
 
 
         sprintf(buffer,"%d",wd.getLidSwitchClosed());
-        wd.sendPacketKeyValue(address,KV, "/data/lidswitch",buffer);
+        wd.sendPacketKeyValue(address,KV, "/data/lidclosed",buffer);
+        delay(100);
+
+        if ((lidstate == LIDSTATEMOVINGUP) || (lidstate == LIDSTATEMOVINGDOWN)) {
+            temp = lidMovingTimeout - millis();
+            sprintf(buffer,"%ld", temp);
+            wd.sendPacketKeyValue(address,KV,"/data/lidmovingtimeout",buffer);
+            delay(100);
+        }
+
+        switch (lidstate) {
+            case LIDSTATEDOWN:
+                sprintf(buffer,"closed");
+                break;
+            case LIDSTATEMOVINGUP:
+                sprintf(buffer,"opening %ds",temp/1000);
+                break;
+            case LIDSTATEUP:
+                sprintf(buffer,"open");
+                break;
+            case LIDSTATEMOVINGDOWN:
+                sprintf(buffer,"closing %ds",temp/1000);
+                break;
+        }
+        wd.sendPacketKeyValue(address,KV,"/data/lidstate",buffer);
+        delay(100);
+        
+
+
+        sprintf(buffer,"%d",speedB);
+        wd.sendPacketKeyValue(address,KV,"/data/lidmotorspeed",buffer);
         delay(100);
 
         sprintf(buffer,"%d",wd.getLoad0On());
@@ -256,6 +305,7 @@ void statusLoop() {
         wd.sendPacketKeyValue(address,KV,"/data/pidoutput",buffer);
         delay(100);
 
+/*
         ftoa(buffer,pid.ppart,2);
         wd.sendPacketKeyValue(address,KV,"/data/pidp",buffer);
         delay(100);
@@ -287,6 +337,7 @@ void statusLoop() {
         ftoa(buffer,pdpid.dpart,2);
         wd.sendPacketKeyValue(address,KV,"/data/pdpidd",buffer);
         delay(100);
+*/
 
         switch (lightstate) {
             case STATELIGHTON:
@@ -352,10 +403,47 @@ void temperatureLoop() {
     wd.setTemperatureSetPoint(pdpidoutput,1);
 }
 
+void lidLoop() {
+    double be  = wd.getBoxExteriorTemperature();
+    switch (lidstate) {
+        case LIDSTATEDOWN:
+            if ( be > LIDUPTHRESHOLD ) {
+                speedB = 100;
+                speedB = wd.motorBSpeed(speedB);
+                lidMovingTimeout = millis() + LIDMOVINGTIME;
+                lidstate = LIDSTATEMOVINGUP;
+            }
+            break;
+        case LIDSTATEMOVINGUP:
+            if (millis() > lidMovingTimeout) {
+                speedB = 0;
+                speedB = wd.motorBSpeed(speedB);
+                lidstate = LIDSTATEUP;
+            }
+            break;
+        case LIDSTATEUP:
+            if ( be < LIDDOWNTHRESHOLD ) {
+                speedB = -100;
+                speedB = wd.motorBSpeed(speedB);
+                lidMovingTimeout = millis() + LIDMOVINGTIME;
+                lidstate = LIDSTATEMOVINGDOWN;
+            }
+            break;
+        case LIDSTATEMOVINGDOWN:
+            if (millis() > lidMovingTimeout) {
+                speedB = 0;
+                speedB = wd.motorBSpeed(speedB);
+                lidstate = LIDSTATEDOWN;
+            }
+            break;
+    }
+}
+
 void loop() {
     statusLoop();
     commLoop();
     wd.loop();
     lightLoop();
     temperatureLoop();
+    lidLoop();
 }
