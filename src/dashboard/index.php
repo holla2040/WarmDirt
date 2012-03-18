@@ -55,7 +55,7 @@
             }
             $("#light").html(data.lightstate);
             $("#extrar").html(data.pidoutput);
-            $("#lid").html(data.lidstate);
+            $("#lid").html(data.lidstate+" "+data.lidclosed);
         });
     }
 
