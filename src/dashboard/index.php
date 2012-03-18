@@ -3,23 +3,25 @@
     mysql_connect('localhost','bldev','bldev7');
     mysql_select_db('bldev') or die("Unable to select database");
 
-    if ($_GET['action'] == "status") {
-        $query="select timestamp,k,v from kv where k LIKE 'us/co/montrose/1001s2nd/warmdirt/1/data/%'";
-        $result = mysql_query($query) or die("query failed");
-        $r = "{";
-        while($row = mysql_fetch_array($result)) {
-            $k = substr($row['k'],40);
-            if ((time() - strtotime($row['timestamp'])) < 300) { 
-                $r .= '"'.$k.'":"'.$row['v'].'",'."\n";
-            } else {
-                $r .= '"'.$k.'":"",'."\n";
+    if (isset($_GET['action'])) {
+        if ($_GET['action'] == "status") {
+            $query="select timestamp,k,v from kv where k LIKE 'us/co/montrose/1001s2nd/warmdirt/1/data/%'";
+            $result = mysql_query($query) or die("query failed");
+            $r = "{";
+            while($row = mysql_fetch_array($result)) {
+                $k = substr($row['k'],40);
+                if ((time() - strtotime($row['timestamp'])) < 300) { 
+                    $r .= '"'.$k.'":"'.$row['v'].'",'."\n";
+                } else {
+                    $r .= '"'.$k.'":"",'."\n";
+                }
+                $ts = $row['timestamp'];
             }
-            $ts = $row['timestamp'];
+            $r .= '"'."timestamp".'":"'.$ts.'"'."\n";
+            $r .="}";
+            echo $r;
+            return;
         }
-        $r .= '"'."timestamp".'":"'.$ts.'"'."\n";
-        $r .="}";
-        echo $r;
-        return;
     }
 ?>
 <html>
