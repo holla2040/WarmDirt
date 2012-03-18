@@ -6,17 +6,17 @@
 #define ACTIVITYUPDATEINVTERVAL 500
 
 int lightstate;
-#define LIGHTONDURATION             7200000L
+#define LIGHTONDURATION             72000L
 #define LIGHTTHRESHOLD              500
 #define STATELIGHTABOVETHRESHOLD    'a'
 #define STATELIGHTON                '1'
 #define STATELIGHTOFF               '0'
 #define STATELIGHTTEMPON            't'
-#define STATELIGHTTEMPONDURATION    600000
+#define STATELIGHTTEMPONDURATION    600000L
 
-#define LIDUPTHRESHOLD              45.0 
-#define LIDDOWNTHRESHOLD            43.0
-#define LIDMOVINGTIME               420000
+#define LIDUPTHRESHOLD              44.0 
+#define LIDDOWNTHRESHOLD            42.5
+#define LIDMOVINGTIME               400000L
 #define LIDSTATEDOWN                'd'
 #define LIDSTATEMOVINGDOWN          'v'
 #define LIDSTATEMOVINGUP            '^'
