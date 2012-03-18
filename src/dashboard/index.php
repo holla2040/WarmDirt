@@ -55,6 +55,7 @@
             }
             $("#light").html(data.lightstate);
             $("#extrar").html(data.pidoutput);
+            $("#lid").html(data.lidstate);
         });
     }
 
@@ -75,15 +76,15 @@
 <table id='datatable'>
 <div id='header'>Warm Dirt Status</div>
 <tr>
-    <td class='label'> </td><td class='data' id="r1c1"></td>
+    <td class='label'>Last Update</td><td class='data' id="timestamp"></td>
     <td class='label'>Outside Air</td> <td class='data' id="temperatureoutside"> </td>
 </tr>
 <tr>
-    <td class='label'>Last Update</td><td class='data' id="timestamp"></td>
+    <td class='label' id='lightlabel'>Light</td> <td class='data' id="light"> </td>
     <td class='label'>Greenhouse Air</td><td class='data' id="temperatureboxexterior"> </td>
 </tr>
 <tr>
-    <td class='label' id='lightlabel'>Light</td> <td class='data' id="light"> </td>
+    <td class='label'>Lid</td><td class='data' id="lid"></td>
     <td class='label'>Box Air</td><td class='data' id="temperatureboxinterior"> </td>
 </tr>
 <tr>
