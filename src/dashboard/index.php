@@ -57,7 +57,8 @@
             }
             $("#light").html(data.lightstate);
             $("#extrar").html(data.pidoutput);
-            $("#lid").html(data.lidstate+" "+data.lidclosed);
+            $("#lid").html(data.lidstate);
+            $("#lidlabel").html("Lid sw="+data.lidclosed);
         });
     }
 
@@ -86,7 +87,7 @@
     <td class='label'>Greenhouse Air</td><td class='data' id="temperatureboxexterior"> </td>
 </tr>
 <tr>
-    <td class='label'>Lid</td><td class='data' id="lid"></td>
+    <td class='label' id='lidlabel'>Lid</td><td class='data' id="lid"></td>
     <td class='label'>Box Air</td><td class='data' id="temperatureboxinterior"> </td>
 </tr>
 <tr>
