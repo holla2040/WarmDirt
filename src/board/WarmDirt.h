@@ -36,6 +36,9 @@
 #define ETX         3
 #define KV  'm'
 
+#define DIRECTIONUP              1
+#define DIRECTIONDOWN            -1
+
 enum{F62500,F7813,F977,F244,F61};
 /** Frequencies available
     timer 0 - pins 5,6 - 62500Hz
@@ -92,6 +95,7 @@ class WarmDirt {
         double      getTemperatureSetPoint();
         double      getPIDOutput();
         void        debug();
+        static int32_t     bencodercount;
 
     private:
         uint16_t    adcaverage(uint8_t pin, uint16_t samples);
@@ -106,6 +110,8 @@ class WarmDirt {
         boolean     temperatureControl;  // should be persisted in EEPROM
         double      temperatureSetPoint; // should be persisted
         double      temperatureHysteresis; // should be persisted
+        static void   countBUpdate();
+        static int8_t bdirection;
 };
 
 #endif
