@@ -54,11 +54,13 @@ int8_t   speedB = 0;
 
 char     address = '1';
 
+
 WarmDirt wd;
 
 void reset() {
     asm volatile("jmp 0x3E00"); /* dont know where I got this but it works on 328 */
 }
+
 
 void setup() {                
     Serial.begin(57600);
@@ -70,6 +72,8 @@ void setup() {
     pdpidsetpoint = 48.0;
     lidstate = LIDSTATEDOWN;
 }
+
+
 
 void commProcess(int c) {
     switch (c) {
@@ -283,6 +287,9 @@ void statusLoop() {
         wd.sendPacketKeyValue(address,KV,"/data/lidstate",buffer);
         delay(100);
         
+        sprintf(buffer,"%d",wd.bencodercount);
+        wd.sendPacketKeyValue(address,KV, "/data/lidencodercount",buffer);
+        delay(100);
 
 
         sprintf(buffer,"%d",speedB);

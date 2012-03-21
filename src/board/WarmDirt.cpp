@@ -23,6 +23,14 @@ PID pid(&pidinput, &pidoutput, &pidsetpoint,3000,1,1,DIRECT);
 int windowSize = 5000;
 unsigned long windowStartTime;
 
+/* see http://stackoverflow.com/questions/4709127/c-gcc-cant-find-static-member-when-linking */
+/* also search for 'static member functions' */
+int32_t WarmDirt::bencodercount;
+int8_t  WarmDirt::bdirection;
+void WarmDirt::countBUpdate() {
+    bencodercount += bdirection;
+}
+
 WarmDirt::WarmDirt(double srhd, double srpd, double srbi, double srbe, double sra0, double sra1) {
     seriesResistorHeatedDirt   = srhd;
     seriesResistorPottedDirt   = srpd;
@@ -60,6 +68,9 @@ WarmDirt::WarmDirt(double srhd, double srpd, double srbi, double srbe, double sr
 
     //eeprom_write_byte(0, '2');
     //id = eeprom_read_byte(0);
+
+    attachInterrupt(0, &WarmDirt::countBUpdate, CHANGE);
+    bencodercount = 0;
 }
 
 void WarmDirt::debug() {
@@ -245,8 +256,10 @@ int8_t  WarmDirt::motorBSpeed(int8_t speed) {
         digitalWrite(PINMOTORBENABLE,LOW);
     } else {
         if (speed > 0) {
+            bdirection = DIRECTIONUP;
             digitalWrite(PINMOTORBIN,HIGH);
         } else {
+            bdirection = DIRECTIONDOWN;
             digitalWrite(PINMOTORBIN,LOW);
         }
         duty = map(abs(speed), 0, 100, 0, 255);
