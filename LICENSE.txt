@@ -1,0 +1,14 @@
+This project is covered under 
+
+Creative Commons BY-SA 3.0
+http://creativecommons.org/licenses/by-sa/3.0/
+
+
+Code from others
+DHT Library     courtesy of Adafruit Industries
+PID Library     courtesy of Brett Beauregard
+Arduino.mk      courtesy of Martin Oldfield
+NewSoftSerial   courtesy of Mikal Hart
+mosquitto       courtesy of Roger Light
+jQuery          courtesy of John Resig 
+PubSubClient    courtesy of Nicholas O'Leary
