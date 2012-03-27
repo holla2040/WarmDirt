@@ -73,8 +73,8 @@ Pin Port    Descriptions            arduino   WarmDirt
 
 
 
-v1.1 - proposed
-    added pot to vrefs on motor driver 
+v1.1 - proposed (* = implemented)
+    * added pot to vrefs on motor driver 
     reworked sense resistor, see Figure 34 in ST AN1762
     added resistors to +12 regulator to use variable regulator LM1084 5A part
     connected +5 regulator input to +12V to lower power dissipation in +5 reg
