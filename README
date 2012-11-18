@@ -93,6 +93,8 @@ v1.1 - proposed (* = implemented)
     * changed test point names
     added rectifier for AC current measurements per Application 4 - Rectified Output
     * added filter caps to motor encoder signals
+    need to use bigger bridge rectifier like GBU8K-BPMS-ND
+    LM1084 +12V part has different footprint than 7812
 v1.0
     initial addition
 
